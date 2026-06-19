@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nonprofit Operations Platform Concept</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #697386;
+      --line: #e4e8f0;
+      --accent: #315efb;
+      --accent-soft: #edf1ff;
+      --success: #1a8f5a;
+      --warn: #b7791f;
+      --danger: #b42318;
+      --purple: #7451eb;
+      --shadow: 0 16px 40px rgba(23, 32, 51, .08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+    aside {
+      background: #111827;
+      color: white;
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .brand { font-weight: 800; font-size: 20px; letter-spacing: -.02em; margin-bottom: 6px; }
+    .subtitle { color: #a7b0c2; font-size: 13px; margin-bottom: 24px; line-height: 1.35; }
+    nav { display: grid; gap: 8px; }
+    .nav-button {
+      border: 0;
+      width: 100%;
+      border-radius: 12px;
+      padding: 12px 13px;
+      text-align: left;
+      background: transparent;
+      color: #d6dbe6;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-button:hover, .nav-button.active { background: rgba(255,255,255,.1); color: white; }
+    .badge { background: #263246; color: #d9e2f3; border-radius: 999px; padding: 2px 8px; font-size: 12px; }
+    main { padding: 28px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    h1 { margin: 0; font-size: 28px; letter-spacing: -.035em; }
+    .muted { color: var(--muted); }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    button.primary, button.secondary, button.danger {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-weight: 650;
+    }
+    button.primary { background: var(--accent); color: white; }
+    button.secondary { background: var(--panel); color: var(--ink); border: 1px solid var(--line); }
+    button.danger { background: #fff3f2; color: var(--danger); border: 1px solid #ffd5d2; }
+    .grid { display: grid; gap: 18px; }
+    .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .two { grid-template-columns: 1.25fr .75fr; align-items: start; }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .metric-label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+    .metric-value { font-size: 30px; font-weight: 800; letter-spacing: -.04em; }
+    .metric-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .section-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 14px; }
+    h2 { margin: 0; font-size: 18px; letter-spacing: -.02em; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 12px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    tr:hover td { background: #fafbff; }
+    .pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 700; }
+    .new { background: #fff3d6; color: var(--warn); }
+    .review { background: var(--accent-soft); color: var(--accent); }
+    .done { background: #e9f8f0; color: var(--success); }
+    .urgent { background: #fff0ef; color: var(--danger); }
+    .chip { display:inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 5px 9px; font-size: 12px; color: var(--muted); background:white; }
+    .list { display: grid; gap: 10px; }
+    .item { border: 1px solid var(--line); border-radius: 14px; padding: 13px; background: #fff; }
+    .item-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom: 5px; }
+    .item strong { display:block; }
+    .small { font-size: 13px; color: var(--muted); line-height: 1.35; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); font-weight: 650; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 12px;
+      font: inherit;
+      color: var(--ink);
+      background: white;
+    }
+    textarea { min-height: 86px; resize: vertical; }
+    .full { grid-column: 1 / -1; }
+    .tabs { display:flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .tab { border: 1px solid var(--line); background:white; color: var(--muted); padding: 9px 12px; border-radius: 999px; cursor:pointer; }
+    .tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .hidden { display: none !important; }
+    .timeline { border-left: 2px solid var(--line); padding-left: 16px; display:grid; gap: 12px; }
+    .timeline .item { position: relative; }
+    .timeline .item:before { content:""; position:absolute; width:10px; height:10px; border-radius:50%; background:var(--accent); left:-22px; top:18px; }
+    .bar { height: 10px; background: #edf0f6; border-radius: 99px; overflow: hidden; margin-top: 8px; }
+    .bar span { display:block; height:100%; background: var(--accent); border-radius: 99px; }
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      .cards, .two, .three, .form-grid { grid-template-columns: 1fr; }
+      main { padding: 18px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand">HealthBase Care</div>
+    <div class="subtitle">Internal nonprofit intake, workflow, volunteer, donor, and reporting platform concept.</div>
+    <nav id="nav"></nav>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div>
+        <h1 id="page-title">Dashboard</h1>
+        <div class="muted" id="page-subtitle">Clear view of requests, cases, follow-ups, and impact.</div>
+      </div>
+      <div class="actions">
+        <button class="secondary" onclick="seedDemoData()">Reset Demo</button>
+        <button class="primary" onclick="openView('intake')">+ New Intake</button>
+      </div>
+    </div>
+
+    <section id="view-dashboard" class="view"></section>
+    <section id="view-intake" class="view hidden"></section>
+    <section id="view-cases" class="view hidden"></section>
+    <section id="view-volunteers" class="view hidden"></section>
+    <section id="view-donors" class="view hidden"></section>
+    <section id="view-reports" class="view hidden"></section>
+    <section id="view-automation" class="view hidden"></section>
+    <section id="view-security" class="view hidden"></section>
+  </main>
+</div>
+
+<script>
+  const navItems = [
+    ['dashboard', 'Dashboard'], ['intake', 'Intake Forms'], ['cases', 'Cases'], ['volunteers', 'Volunteers'],
+    ['donors', 'Donors & Partners'], ['reports', 'Reports'], ['automation', 'Automation'], ['security', 'Security']
+  ];
+
+  let submissions = [];
+  let volunteers = [];
+  let donors = [];
+  let activity = [];
+  let activeView = 'dashboard';
+
+  function seedDemoData() {
+    submissions = [
+      { id: 1001, name: 'Maria Lopez', type: 'Request for services', priority: 'Urgent', assigned: 'Ava Chen', status: 'New', due: 'Today', email: 'maria@example.org', notes: 'Needs rental assistance and food support. Submitted through website.' },
+      { id: 1002, name: 'Bright Path Church', type: 'Community partner referral', priority: 'Normal', assigned: 'Sam Patel', status: 'In Review', due: 'Tomorrow', email: 'partner@example.org', notes: 'Referral for family of four. Eligibility review pending.' },
+      { id: 1003, name: 'Jordan Kim', type: 'Volunteer application', priority: 'Normal', assigned: 'Leah Stone', status: 'New', due: '2 days', email: 'jordan@example.org', notes: 'Available Saturdays. Skills: Spanish, tutoring, logistics.' },
+      { id: 1004, name: 'Civic Foundation', type: 'Donation inquiry', priority: 'Normal', assigned: 'Nora Bell', status: 'Completed', due: 'Done', email: 'giving@example.org', notes: 'Asked about sponsorship package. Thank-you email sent.' }
+    ];
+    volunteers = [
+      { name: 'Jordan Kim', status: 'Application', hours: 0, availability: 'Sat AM', skills: 'Spanish, tutoring', check: 'Pending' },
+      { name: 'Maya Rivers', status: 'Active', hours: 42, availability: 'Wed PM', skills: 'Food pantry, data entry', check: 'Cleared' },
+      { name: 'Owen Brown', status: 'Active', hours: 18, availability: 'Flexible', skills: 'Events, driving', check: 'Cleared' }
+    ];
+    donors = [
+      { name: 'Civic Foundation', type: 'Grant maker', total: '$25,000', next: 'Grant report due Jul 15', status: 'Active' },
+      { name: 'Northside Market', type: 'Sponsor', total: '$4,500', next: 'Renewal call', status: 'Warm' },
+      { name: 'Elena Walsh', type: 'Individual donor', total: '$1,200', next: 'Send annual impact note', status: 'Active' }
+    ];
+    activity = [
+      'Confirmation email sent to Maria Lopez',
+      'Urgent intake assigned to Ava Chen',
+      'Volunteer application created for Jordan Kim',
+      'Donation inquiry marked completed'
+    ];
+    save(); render();
+  }
+
+  function save() {
+    localStorage.setItem('careops-demo', JSON.stringify({ submissions, volunteers, donors, activity }));
+  }
+
+  function load() {
+    const raw = localStorage.getItem('careops-demo');
+    if (raw) {
+      const data = JSON.parse(raw);
+      submissions = data.submissions || [];
+      volunteers = data.volunteers || [];
+      donors = data.donors || [];
+      activity = data.activity || [];
+    } else seedDemoData();
+  }
+
+  function statusClass(status, priority) {
+    if (priority === 'Urgent') return 'urgent';
+    if (status === 'New') return 'new';
+    if (status === 'In Review') return 'review';
+    return 'done';
+  }
+
+  function openView(view) {
+    activeView = view;
+    document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+    document.getElementById(`view-${view}`).classList.remove('hidden');
+    document.querySelectorAll('.nav-button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+    const title = navItems.find(n => n[0] === view)[1];
+    document.getElementById('page-title').textContent = title;
+    const subtitles = {
+      dashboard: 'Clear view of requests, cases, follow-ups, and impact.',
+      intake: 'Capture website submissions and route them into workflow.',
+      cases: 'Track clients, notes, documents, eligibility, referrals, and outcomes.',
+      volunteers: 'Manage applications, availability, checks, shifts, and service hours.',
+      donors: 'Lightweight CRM for donors, sponsors, grants, and community partners.',
+      reports: 'Operational and impact metrics for board updates and grants.',
+      automation: 'Email confirmations, reminders, weekly summaries, and status updates.',
+      security: 'Role-based access, audit history, backups, and privacy controls.'
+    };
+    document.getElementById('page-subtitle').textContent = subtitles[view];
+  }
+
+  function renderNav() {
+    document.getElementById('nav').innerHTML = navItems.map(([id, label]) => {
+      const count = id === 'dashboard' ? submissions.filter(s => s.status !== 'Completed').length : '';
+      return `<button class="nav-button ${id === activeView ? 'active' : ''}" data-view="${id}" onclick="openView('${id}')"><span>${label}</span>${count !== '' ? `<span class="badge">${count}</span>` : ''}</button>`;
+    }).join('');
+  }
+
+  function metrics() {
+    const open = submissions.filter(s => s.status !== 'Completed').length;
+    const urgent = submissions.filter(s => s.priority === 'Urgent' && s.status !== 'Completed').length;
+    const volunteersActive = volunteers.filter(v => v.status === 'Active').length;
+    const hours = volunteers.reduce((sum, v) => sum + Number(v.hours || 0), 0);
+    return { open, urgent, volunteersActive, hours };
+  }
+
+  function renderDashboard() {
+    const m = metrics();
+    document.getElementById('view-dashboard').innerHTML = `
+      <div class="grid cards">
+        ${metric('Open Requests', m.open, 'Needs staff follow-up')}
+        ${metric('Urgent Cases', m.urgent, 'High-priority intakes')}
+        ${metric('Active Volunteers', m.volunteersActive, 'Ready for assignments')}
+        ${metric('Volunteer Hours', m.hours, 'Tracked this period')}
+      </div>
+      <div class="grid two" style="margin-top:18px;">
+        <div class="card">
+          <div class="section-title"><h2>New & Assigned Submissions</h2><span class="chip">Website intake pipeline</span></div>
+          ${submissionsTable(submissions)}
+        </div>
+        <div class="grid">
+          <div class="card">
+            <div class="section-title"><h2>Overdue / Priority Follow-ups</h2></div>
+            <div class="list">
+              ${submissions.filter(s => s.priority === 'Urgent' || s.due === 'Today').map(s => item(s.name, `${s.type} · Assigned to ${s.assigned}`, s.priority === 'Urgent' ? 'urgent' : statusClass(s.status, s.priority), s.priority)).join('') || '<p class="muted">No urgent follow-ups.</p>'}
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title"><h2>Recent Activity</h2></div>
+            <div class="timeline">${activity.slice(0,5).map(a => `<div class="item small">${a}</div>`).join('')}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function metric(label, value, note) {
+    return `<div class="card"><div class="metric-label">${label}</div><div class="metric-value">${value}</div><div class="metric-note">${note}</div></div>`;
+  }
+
+  function item(title, desc, cls, label) {
+    return `<div class="item"><div class="item-head"><strong>${title}</strong><span class="pill ${cls}">${label}</span></div><div class="small">${desc}</div></div>`;
+  }
+
+  function submissionsTable(rows) {
+    return `<table><thead><tr><th>Name</th><th>Type</th><th>Status</th><th>Assigned</th><th>Due</th><th></th></tr></thead><tbody>${rows.map(s => `
+      <tr>
+        <td><strong>${s.name}</strong><div class="small">${s.email}</div></td>
+        <td>${s.type}<div class="small">${s.notes}</div></td>
+        <td><span class="pill ${statusClass(s.status, s.priority)}">${s.priority === 'Urgent' ? 'Urgent' : s.status}</span></td>
+        <td>${s.assigned}</td>
+        <td>${s.due}</td>
+        <td><select onchange="updateStatus(${s.id}, this.value)"><option ${s.status==='New'?'selected':''}>New</option><option ${s.status==='In Review'?'selected':''}>In Review</option><option ${s.status==='Completed'?'selected':''}>Completed</option></select></td>
+      </tr>`).join('')}</tbody></table>`;
+  }
+
+  function updateStatus(id, status) {
+    const s = submissions.find(x => x.id === id);
+    if (!s) return;
+    s.status = status;
+    activity.unshift(`${s.name} status changed to ${status}`);
+    save(); render(); openView(activeView);
+  }
+
+  function renderIntake() {
+    document.getElementById('view-intake').innerHTML = `
+      <div class="grid two">
+        <div class="card">
+          <div class="section-title"><h2>Website Intake Form</h2><span class="chip">Creates case + task + email</span></div>
+          <form id="intakeForm" class="form-grid" onsubmit="addSubmission(event)">
+            <label>Name<input name="name" required placeholder="Client, volunteer, donor, or partner name"></label>
+            <label>Email<input name="email" type="email" required placeholder="name@example.org"></label>
+            <label>Request Type<select name="type"><option>Request for services</option><option>Volunteer application</option><option>Donation inquiry</option><option>Community partner referral</option><option>Event registration</option><option>General contact form</option><option>Emergency or high-priority request</option></select></label>
+            <label>Priority<select name="priority"><option>Normal</option><option>Urgent</option></select></label>
+            <label>Assign To<select name="assigned"><option>Ava Chen</option><option>Sam Patel</option><option>Leah Stone</option><option>Nora Bell</option></select></label>
+            <label>Follow-up Due<select name="due"><option>Today</option><option>Tomorrow</option><option>2 days</option><option>Next week</option></select></label>
+            <label class="full">Notes<textarea name="notes" placeholder="What does the person need? Eligibility info? Referral source? Documents required?"></textarea></label>
+            <div class="full actions"><button class="primary" type="submit">Submit Intake</button><button class="secondary" type="reset">Clear</button></div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="section-title"><h2>Automatic Workflow</h2></div>
+          <div class="list">
+            ${['Save secure database record','Categorize by request type','Assign staff owner','Send confirmation email','Create internal follow-up task','Track status from New → Completed','Store notes and history'].map((x,i)=> item(`${i+1}. ${x}`, 'Included in MVP workflow concept.', 'review', 'Auto')).join('')}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function addSubmission(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target).entries());
+    submissions.unshift({ id: Date.now(), status: 'New', ...data });
+    activity.unshift(`New ${data.type.toLowerCase()} received from ${data.name}`);
+    activity.unshift(`Confirmation email queued for ${data.name}`);
+    save(); render(); event.target.reset(); openView('dashboard');
+  }
+
+  function renderCases() {
+    document.getElementById('view-cases').innerHTML = `
+      <div class="grid two">
+        <div class="card"><div class="section-title"><h2>Case / Client Records</h2><span class="chip">Continuity across staff</span></div>${submissionsTable(submissions.filter(s => s.type.includes('services') || s.type.includes('referral') || s.priority === 'Urgent'))}</div>
+        <div class="card"><div class="section-title"><h2>Selected Case Profile</h2></div>
+          ${caseProfile(submissions[0])}
+        </div>
+      </div>`;
+  }
+
+  function caseProfile(s) {
+    if (!s) return '<p class="muted">No cases yet.</p>';
+    return `<div class="list">
+      ${item(s.name, `${s.email} · ${s.type}`, statusClass(s.status, s.priority), s.status)}
+      <div class="item"><strong>Eligibility</strong><div class="small">Pending review. Staff can add criteria, service history, referral source, and outcome.</div></div>
+      <div class="item"><strong>Documents</strong><div class="small">Upload proof of address, IDs, referral forms, or signed releases in future version.</div></div>
+      <div class="item"><strong>Follow-up History</strong><div class="small">${s.notes}</div></div>
+      <div class="item"><strong>Outcome Tracking</strong><div class="small">Not started → Service provided → Referred externally → Closed.</div></div>
+    </div>`;
+  }
+
+  function renderVolunteers() {
+    document.getElementById('view-volunteers').innerHTML = `
+      <div class="card"><div class="section-title"><h2>Volunteer Management</h2><button class="secondary" onclick="addVolunteer()">+ Demo Volunteer</button></div>
+      <table><thead><tr><th>Name</th><th>Status</th><th>Availability</th><th>Skills</th><th>Background Check</th><th>Hours</th></tr></thead><tbody>${volunteers.map(v => `<tr><td><strong>${v.name}</strong></td><td><span class="pill ${v.status==='Active'?'done':'review'}">${v.status}</span></td><td>${v.availability}</td><td>${v.skills}</td><td>${v.check}</td><td>${v.hours}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  function addVolunteer() {
+    volunteers.unshift({ name: 'New Volunteer', status: 'Application', hours: 0, availability: 'TBD', skills: 'Intake form pending', check: 'Pending' });
+    activity.unshift('New volunteer application created'); save(); render(); openView('volunteers');
+  }
+
+  function renderDonors() {
+    document.getElementById('view-donors').innerHTML = `
+      <div class="card"><div class="section-title"><h2>Donor, Sponsor & Partner CRM</h2><span class="chip">Relationship tracking</span></div>
+      <table><thead><tr><th>Name</th><th>Type</th><th>Total Giving / Value</th><th>Next Action</th><th>Status</th></tr></thead><tbody>${donors.map(d => `<tr><td><strong>${d.name}</strong></td><td>${d.type}</td><td>${d.total}</td><td>${d.next}</td><td><span class="pill review">${d.status}</span></td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  function renderReports() {
+    const m = metrics();
+    const serviceRequests = submissions.filter(s => s.type.includes('services') || s.type.includes('Emergency')).length;
+    document.getElementById('view-reports').innerHTML = `
+      <div class="grid cards">${metric('People Served', serviceRequests, 'Demo month')}${metric('Avg Response', '1.8d', 'Target under 2 days')}${metric('Open vs Completed', `${m.open}/${submissions.length}`, 'Workflow health')}${metric('Volunteer Hours', m.hours, 'Grant-ready metric')}</div>
+      <div class="grid three" style="margin-top:18px;">
+        ${reportCard('Services by Category', [['Services', serviceRequests, 70], ['Volunteers', volunteers.length, 55], ['Donation/Partner', donors.length, 45]])}
+        ${reportCard('Referral Sources', [['Website', 8, 80], ['Partners', 3, 45], ['Events', 2, 30]])}
+        ${reportCard('Case Outcomes', [['Completed', submissions.filter(s=>s.status==='Completed').length, 35], ['In Review', submissions.filter(s=>s.status==='In Review').length, 50], ['New', submissions.filter(s=>s.status==='New').length, 65]])}
+      </div>`;
+  }
+
+  function reportCard(title, rows) {
+    return `<div class="card"><h2>${title}</h2>${rows.map(([label, val, width]) => `<div style="margin-top:14px;"><div class="small" style="display:flex; justify-content:space-between;"><span>${label}</span><strong>${val}</strong></div><div class="bar"><span style="width:${width}%"></span></div></div>`).join('')}</div>`;
+  }
+
+  function renderAutomation() {
+    const flows = [
+      ['Form confirmation', 'Send submitter an immediate email with next steps.'],
+      ['Staff overdue reminders', 'Notify owner when a follow-up is past due.'],
+      ['Volunteer shift reminders', 'Send reminder before assigned shift or event.'],
+      ['Donation thank-you', 'Send personalized receipt and appreciation note.'],
+      ['Weekly internal summary', 'Email leadership new cases, completions, and bottlenecks.']
+    ];
+    document.getElementById('view-automation').innerHTML = `<div class="grid two"><div class="card"><div class="section-title"><h2>Automation Rules</h2><span class="chip">Reducing admin work</span></div><div class="list">${flows.map(f => item(f[0], f[1], 'review', 'Enabled')).join('')}</div></div><div class="card"><h2>Email Template Preview</h2><div class="item" style="margin-top:14px;"><strong>Subject: We received your request</strong><div class="small" style="margin-top:8px;">Thank you for contacting us. Your request has been received and assigned to our team. We will follow up shortly. If this is urgent, please call our office directly.</div></div></div></div>`;
+  }
+
+  function renderSecurity() {
+    const rows = ['Staff login accounts', 'Role-based permissions', 'Encrypted form submission handling', 'Limited access to client data', 'Audit history for changes', 'Regular backups', 'Admin user management'];
+    document.getElementById('view-security').innerHTML = `<div class="grid two"><div class="card"><div class="section-title"><h2>Security & Privacy Controls</h2></div><div class="list">${rows.map(r => item(r, 'Required for handling sensitive nonprofit data.', 'done', 'MVP')).join('')}</div></div><div class="card"><h2>Suggested Roles</h2><table style="margin-top:12px;"><tbody><tr><td><strong>Admin</strong></td><td>Users, settings, all records</td></tr><tr><td><strong>Program Staff</strong></td><td>Cases, notes, documents</td></tr><tr><td><strong>Volunteer Coordinator</strong></td><td>Volunteer records and shifts</td></tr><tr><td><strong>Development</strong></td><td>Donors, grants, partners</td></tr><tr><td><strong>Read-only Board</strong></td><td>Reports only</td></tr></tbody></table></div></div>`;
+  }
+
+  function render() {
+    renderNav(); renderDashboard(); renderIntake(); renderCases(); renderVolunteers(); renderDonors(); renderReports(); renderAutomation(); renderSecurity();
+  }
+
+  load(); render(); openView('dashboard');
+</script>
+</body>
+</html>
