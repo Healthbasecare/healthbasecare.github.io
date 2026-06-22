@@ -172,8 +172,15 @@
     }
     .calendar-panel { padding: 18px; }
     .month-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .days, .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .calendar-scroll { width: 100%; overflow: hidden; }
+    .days, .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      width: 100%;
+    }
+    .calendar-grid { grid-auto-rows: minmax(112px, auto); }
     .day-name {
+      min-width: 0;
       text-align: center;
       color: var(--muted);
       font-size: 12px;
@@ -192,6 +199,12 @@
       color: inherit;
       font: inherit;
       border-radius: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -230,9 +243,11 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 100%;
+      min-width: 0;
     }
     .event-chip.sunday { background: #eefaf2; color: #16653f; }
-    .event-chip.tuesday { background: #f1edff; color: #4f32b5; }
+    .event-chip.wednesday { background: #f1edff; color: #4f32b5; }
     .calendar-aside {
       border-left: 1px solid var(--line);
       background: #fbfcff;
@@ -327,8 +342,8 @@
       .calendar-panel { padding: 14px; }
       .calendar-header { align-items: flex-start; flex-direction: column; }
       .month-controls button { flex: 1; min-width: 96px; }
-      .days, .calendar-grid { min-width: 680px; }
       .calendar-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .days, .calendar-grid { width: 680px; min-width: 680px; max-width: none; }
       .cell { min-height: 92px; }
       .calendar-aside { padding: 14px; }
       .item-top, .automation-row { flex-direction: column; align-items: flex-start; }
@@ -747,7 +762,7 @@
         if (date.getMonth() !== viewDate.getMonth()) cell.classList.add('muted');
         if (sameDay(date, selectedDate)) cell.classList.add('selected');
         if (sameDay(date, new Date())) cell.classList.add('today');
-        const chips = (events[key] || []).slice(0, 3).map(e => `<span class="event-chip ${e.type === 'Sunday' ? 'sunday' : 'tuesday'}">${escapeHtml(e.time + ' ' + e.title)}</span>`).join('');
+        const chips = (events[key] || []).slice(0, 3).map(e => `<span class="event-chip ${e.type === 'Sunday' ? 'sunday' : 'wednesday'}">${escapeHtml(e.time + ' ' + e.title)}</span>`).join('');
         cell.innerHTML = `<span class="date-number">${date.getDate()}</span>${chips}`;
         cell.addEventListener('click', () => {
           selectedDate = startOfDay(date);
@@ -916,11 +931,11 @@
     function renderAnalytics() {
       const monthKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
       const thisMonthRegs = registrations.filter(r => r.eventDate.startsWith(monthKey));
-      const tuesday = thisMonthRegs.filter(r => r.eventTitle.includes('Care Navigation')).length;
+      const wednesday = thisMonthRegs.filter(r => r.eventTitle.includes('Care Navigation')).length;
       const sunday = thisMonthRegs.filter(r => r.eventTitle.includes('Community Health')).length;
       const openForms = forms.filter(f => f.status !== 'Completed').length;
       document.getElementById('analyticsRegistrations').textContent = thisMonthRegs.length;
-      document.getElementById('analyticsWednesday').textContent = tuesday;
+      document.getElementById('analyticsWednesday').textContent = wednesday;
       document.getElementById('analyticsSunday').textContent = sunday;
       document.getElementById('analyticsOpenForms').textContent = openForms;
       document.getElementById('analyticsPeople').textContent = registrations.length;
