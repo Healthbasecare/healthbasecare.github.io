@@ -358,7 +358,7 @@
       <div class="topbar">
         <div>
           <h1 id="pageTitle">Care Calendar</h1>
-          <div class="muted" id="pageSubtitle">Tuesday and Sunday nonprofit care events with registration.</div>
+          <div class="muted" id="pageSubtitle">Wednesday and Sunday nonprofit care events with registration.</div>
         </div>
       </div>
 
@@ -367,7 +367,7 @@
           <article class="card metric">
             <div class="label">Upcoming care events</div>
             <div class="value" id="upcomingCount">0</div>
-            <div class="trend">Tuesdays and Sundays</div>
+            <div class="trend">Wednesdays and Sundays</div>
           </article>
           <article class="card metric">
             <div class="label">Registrations</div>
@@ -394,7 +394,7 @@
           <section class="card">
             <h2>Operating focus</h2>
             <div class="list">
-              <div class="item"><strong>Care Navigation</strong><p class="muted small">Tuesday support for intake, eligibility review, referrals, and care coordination.</p></div>
+              <div class="item"><strong>Care Navigation</strong><p class="muted small">Wednesday support for intake, eligibility review, referrals, and care coordination.</p></div>
               <div class="item"><strong>Community Health Support</strong><p class="muted small">Sunday support for wellness checks, resource navigation, and family assistance.</p></div>
               <div class="item"><strong>Submitted forms queue</strong><p class="muted small">Every registration creates a submitted form that staff can review in the Forms page.</p></div>
             </div>
@@ -424,7 +424,7 @@
 
             <aside class="calendar-aside">
               <h2 id="selectedTitle"></h2>
-              <p class="muted">Select a Tuesday or Sunday care event and register below.</p>
+              <p class="muted">Select a Wednesday or Sunday care event and register below.</p>
               <div id="eventList"></div>
             </aside>
           </div>
@@ -434,7 +434,7 @@
       <section class="view" id="registrationsView">
         <div class="card">
           <h2>Event registrations</h2>
-          <p class="muted">People registered for Tuesday and Sunday nonprofit care events.</p>
+          <p class="muted">People registered for Wednesday and Sunday nonprofit care events.</p>
           <div class="table-wrap"><table><thead><tr><th>Name</th><th>Event</th><th>Date</th><th>Contact</th><th>Need</th><th>Status</th></tr></thead><tbody id="registrationsTable"></tbody></table></div>
         </div>
       </section>
@@ -474,7 +474,7 @@
           <section class="card">
             <h2>Other Info</h2>
             <div class="list">
-              <div class="item"><strong>Volunteer coordination</strong><p class="muted small">Track available volunteers for Tuesday sessions and Sunday support sessions.</p></div>
+              <div class="item"><strong>Volunteer coordination</strong><p class="muted small">Track available volunteers for Wednesday sessions and Sunday support sessions.</p></div>
               <div class="item"><strong>Partner referrals</strong><p class="muted small">Capture community partner referrals and route them to the appropriate program coordinator.</p></div>
               <div class="item"><strong>Donor follow-up</strong><p class="muted small">Use event participation and monthly impact metrics in donor updates and board reporting.</p></div>
             </div>
@@ -507,7 +507,7 @@
       <section class="view" id="analyticsView">
         <div class="grid cards">
           <article class="card metric"><div class="label">Monthly registrations</div><div class="value" id="analyticsRegistrations">0</div><div class="trend">Across all events</div></article>
-          <article class="card metric"><div class="label">Care navigation</div><div class="value" id="analyticsTuesday">0</div><div class="trend">Tuesday program</div></article>
+          <article class="card metric"><div class="label">Care navigation</div><div class="value" id="analyticsWednesday">0</div><div class="trend">Wednesday program</div></article>
           <article class="card metric"><div class="label">Community support</div><div class="value" id="analyticsSunday">0</div><div class="trend">Sunday program</div></article>
           <article class="card metric"><div class="label">Open forms</div><div class="value" id="analyticsOpenForms">0</div><div class="trend">Awaiting review</div></article>
         </div>
@@ -565,7 +565,7 @@
     ];
 
     const titles = {
-      calendar: ['Care Calendar', 'Tuesday and Sunday nonprofit care events with registration.'],
+      calendar: ['Care Calendar', 'Wednesday and Sunday nonprofit care events with registration.'],
       registrations: ['Registrations', 'People registered for care events.'],
       medical: ['Medical Information', 'Care coordination information and privacy notes.'],
       forms: ['Submitted Forms', 'Forms submitted from registrations and intake workflows.']
@@ -630,12 +630,12 @@
       for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         const day = d.getDay();
         const key = dateKey(d);
-        if (day === 2) {
+        if (day === 3) {
           result[key] = result[key] || [];
           result[key].push({
             id: 'care-nav-' + key,
             title: 'Care Navigation',
-            type: 'Tuesday',
+            type: 'Wednesday',
             date: key,
             time: '10:00',
             location: 'HealthBase Care Center',
@@ -920,7 +920,7 @@
       const sunday = thisMonthRegs.filter(r => r.eventTitle.includes('Community Health')).length;
       const openForms = forms.filter(f => f.status !== 'Completed').length;
       document.getElementById('analyticsRegistrations').textContent = thisMonthRegs.length;
-      document.getElementById('analyticsTuesday').textContent = tuesday;
+      document.getElementById('analyticsWednesday').textContent = tuesday;
       document.getElementById('analyticsSunday').textContent = sunday;
       document.getElementById('analyticsOpenForms').textContent = openForms;
       document.getElementById('analyticsPeople').textContent = registrations.length;
