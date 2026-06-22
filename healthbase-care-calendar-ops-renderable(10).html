@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>HealthBase Care Calendar Platform</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #697386;
+      --line: #e4e8f0;
+      --accent: #315efb;
+      --accent-soft: #edf1ff;
+      --success: #1a8f5a;
+      --success-soft: #eaf8f0;
+      --warn: #b7791f;
+      --warn-soft: #fff7e6;
+      --danger: #b42318;
+      --danger-soft: #fff3f2;
+      --purple: #7451eb;
+      --purple-soft: #f1edff;
+      --shadow: 0 16px 40px rgba(23, 32, 51, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+    .sidebar {
+      background: #111827;
+      color: white;
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .brand { font-weight: 800; font-size: 20px; letter-spacing: -.02em; margin-bottom: 6px; }
+    .subtitle { color: #a7b0c2; font-size: 13px; margin-bottom: 24px; line-height: 1.35; }
+    nav { display: grid; gap: 8px; }
+    .nav-button {
+      border: 0;
+      width: 100%;
+      border-radius: 12px;
+      padding: 12px 13px;
+      text-align: left;
+      background: transparent;
+      color: #d6dbe6;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .nav-button:hover, .nav-button.active { background: rgba(255,255,255,.1); color: white; }
+    .badge { background: #263246; color: #d9e2f3; border-radius: 999px; padding: 2px 8px; font-size: 12px; white-space: nowrap; }
+    .mobile-header { display: none; }
+    main { padding: 28px; min-width: 0; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    h1 { margin: 0; font-size: 28px; letter-spacing: -.035em; }
+    h2 { margin: 0 0 12px; font-size: 20px; letter-spacing: -.02em; }
+    h3 { margin: 0 0 8px; font-size: 16px; }
+    p { margin-top: 0; }
+    .muted { color: var(--muted); }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .actions.hidden { display: none; }
+    button.primary, button.secondary, button.danger, button.success {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-weight: 650;
+      min-height: 42px;
+    }
+    button.primary { background: var(--accent); color: white; }
+    button.secondary { background: var(--panel); color: var(--ink); border: 1px solid var(--line); }
+    button.danger { background: var(--danger-soft); color: var(--danger); border: 1px solid #ffd5d2; }
+    button.success { background: var(--success); color: white; }
+    .grid { display: grid; gap: 18px; }
+    .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .two { grid-template-columns: 1.25fr .75fr; align-items: start; }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+    .metric .label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+    .metric .value { font-size: 30px; font-weight: 800; letter-spacing: -.04em; }
+    .metric .trend { font-size: 13px; margin-top: 6px; color: var(--success); }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--accent-soft);
+      color: #1d3db8;
+      white-space: nowrap;
+    }
+    .pill.green { background: var(--success-soft); color: var(--success); }
+    .pill.warn { background: var(--warn-soft); color: var(--warn); }
+    .pill.purple { background: var(--purple-soft); color: var(--purple); }
+    .pill.red { background: var(--danger-soft); color: var(--danger); }
+    .program-categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 10px 0 14px;
+      align-items: center;
+    }
+    .program-categories .pill {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .toolbar-note {
+      background: linear-gradient(135deg, #edf1ff, #f4fbff);
+      border: 1px solid #dfe7ff;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid #d9deea;
+      border-radius: 12px;
+      padding: 11px 12px;
+      font: inherit;
+      background: white;
+    }
+    textarea { min-height: 86px; resize: vertical; }
+    label { display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #364154; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .full { grid-column: 1 / -1; }
+
+    .calendar-shell {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      min-height: 660px;
+      overflow: hidden;
+    }
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 18px;
+    }
+    .calendar-panel { padding: 18px; }
+    .month-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .days, .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .day-name {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding-bottom: 10px;
+    }
+    .cell {
+      min-height: 112px;
+      padding: 9px;
+      border: 1px solid #edf0f7;
+      background: #fff;
+      position: relative;
+      cursor: pointer;
+      text-align: left;
+      color: inherit;
+      font: inherit;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .cell:hover { background: #f9fbff; }
+    .cell.muted { color: #a3aab8; background: #fafbfe; }
+    .cell.selected { outline: 3px solid var(--accent); outline-offset: -3px; z-index: 1; }
+    .date-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .today .date-number {
+      background: var(--accent);
+      color: white;
+    }
+    .event-chip {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 0;
+      padding: 4px 6px;
+      border-radius: 8px;
+      background: #eaf1ff;
+      color: #173b8f;
+      font-size: 12px;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .event-chip.sunday { background: #eefaf2; color: #16653f; }
+    .event-chip.tuesday { background: #f1edff; color: #4f32b5; }
+    .calendar-aside {
+      border-left: 1px solid var(--line);
+      background: #fbfcff;
+      padding: 18px;
+      overflow-y: auto;
+    }
+    .event-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .event-card strong { display: block; margin-bottom: 4px; }
+    .event-card small { color: var(--muted); }
+    .event-card p { margin: 8px 0 12px; color: #4b5565; }
+    .empty { color: #7a8496; padding: 12px; border: 1px dashed #ccd3df; border-radius: 12px; }
+    .list { display: grid; gap: 12px; }
+    .item {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .item-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+    .small { font-size: 13px; }
+
+    .automation-card {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+    .automation-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #111827;
+      color: white;
+      padding: 12px 14px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      display: none;
+      z-index: 30;
+      max-width: calc(100vw - 36px);
+    }
+    .toast.show { display: block; }
+
+    @media (max-width: 1080px) {
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .two, .three, .calendar-shell { grid-template-columns: 1fr; }
+      .calendar-aside { border-left: 0; border-top: 1px solid var(--line); }
+    }
+
+    @media (max-width: 780px) {
+      body { background: var(--panel); }
+      .app { display: block; }
+      .sidebar { display: none; }
+      .mobile-header {
+        display: block;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: #111827;
+        color: white;
+        padding: 14px 12px 10px;
+        box-shadow: 0 8px 22px rgba(17,24,39,.22);
+      }
+      .mobile-title { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 10px; }
+      .mobile-nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 2px;
+      }
+      .mobile-nav .nav-button {
+        width: auto;
+        min-width: max-content;
+        padding: 10px 12px;
+        background: rgba(255,255,255,.08);
+      }
+      main { padding: 16px 12px 24px; }
+      .topbar { align-items: flex-start; flex-direction: column; margin-bottom: 16px; }
+      h1 { font-size: 24px; }
+      .cards, .form-grid { grid-template-columns: 1fr; }
+      .card { border-radius: 16px; padding: 15px; box-shadow: none; }
+      .calendar-panel { padding: 14px; }
+      .calendar-header { align-items: flex-start; flex-direction: column; }
+      .month-controls button { flex: 1; min-width: 96px; }
+      .days, .calendar-grid { min-width: 680px; }
+      .calendar-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .cell { min-height: 92px; }
+      .calendar-aside { padding: 14px; }
+      .item-top, .automation-row { flex-direction: column; align-items: flex-start; }
+      th, td { white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-header">
+    <div class="mobile-title">
+      <div>
+        <div class="brand">HealthBase Care</div>
+        <div class="subtitle" style="margin:0">Calendar & care coordination</div>
+      </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav"></nav>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">HealthBase Care</div>
+      <div class="subtitle">Nonprofit care calendar, registrations, medical information, and submitted forms.</div>
+      <nav id="desktopNav"></nav>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div>
+          <h1 id="pageTitle">Care Calendar</h1>
+          <div class="muted" id="pageSubtitle">Tuesday and Sunday nonprofit care events with registration.</div>
+        </div>
+      </div>
+
+      <section class="view" id="dashboardView">
+        <div class="grid cards">
+          <article class="card metric">
+            <div class="label">Upcoming care events</div>
+            <div class="value" id="upcomingCount">0</div>
+            <div class="trend">Tuesdays and Sundays</div>
+          </article>
+          <article class="card metric">
+            <div class="label">Registrations</div>
+            <div class="value" id="registrationCount">0</div>
+            <div class="trend">Creates submitted forms</div>
+          </article>
+          <article class="card metric">
+            <div class="label">Open submitted forms</div>
+            <div class="value" id="openFormsCount">0</div>
+            <div class="trend">Ready for staff review</div>
+          </article>
+          <article class="card metric">
+            <div class="label">Volunteer slots</div>
+            <div class="value">8</div>
+            <div class="trend">Needed this month</div>
+          </article>
+        </div>
+
+        <div class="grid two" style="margin-top:18px">
+          <section class="card">
+            <h2>Next care events</h2>
+            <div class="list" id="nextEventsList"></div>
+          </section>
+          <section class="card">
+            <h2>Operating focus</h2>
+            <div class="list">
+              <div class="item"><strong>Care Navigation</strong><p class="muted small">Tuesday support for intake, eligibility review, referrals, and care coordination.</p></div>
+              <div class="item"><strong>Community Health Support</strong><p class="muted small">Sunday support for wellness checks, resource navigation, and family assistance.</p></div>
+              <div class="item"><strong>Submitted forms queue</strong><p class="muted small">Every registration creates a submitted form that staff can review in the Forms page.</p></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view active" id="calendarView">
+        <div class="card" style="padding:0; overflow:hidden">
+          <div class="calendar-shell">
+            <section class="calendar-panel">
+              <div class="calendar-header">
+                <div>
+                  <h2 id="monthTitle"></h2>
+                  <div class="muted" id="todayLabel"></div>
+                </div>
+                <div class="month-controls">
+                  <button class="secondary" id="prevBtn" type="button">‹ Previous</button>
+                  <button class="secondary" id="nextBtn" type="button">Next ›</button>
+                </div>
+              </div>
+              <div class="calendar-scroll">
+                <div class="days" id="dayNames"></div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+              </div>
+            </section>
+
+            <aside class="calendar-aside">
+              <h2 id="selectedTitle"></h2>
+              <p class="muted">Select a Tuesday or Sunday care event and register below.</p>
+              <div id="eventList"></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="registrationsView">
+        <div class="card">
+          <h2>Event registrations</h2>
+          <p class="muted">People registered for Tuesday and Sunday nonprofit care events.</p>
+          <div class="table-wrap"><table><thead><tr><th>Name</th><th>Event</th><th>Date</th><th>Contact</th><th>Need</th><th>Status</th></tr></thead><tbody id="registrationsTable"></tbody></table></div>
+        </div>
+      </section>
+
+      <section class="view" id="medicalView">
+        <div class="toolbar-note">
+          <h2>Medical information</h2>
+          <p class="muted" style="margin-bottom:0">Medical intake details for care coordination.</p>
+        </div>
+        <div class="grid two">
+          <section class="card">
+            <h2>Medical details intake</h2>
+            <p class="muted">Use this form to capture basic care-navigation details before or after a community event.</p>
+            <form id="medicalDetailsForm" class="form-grid">
+              <label>Participant name
+                <input name="name" placeholder="Full name" required />
+              </label>
+              <label>Contact
+                <input name="contact" placeholder="Email or phone" required />
+              </label>
+              <label class="full">Notes
+                <textarea name="notes" placeholder="Brief care coordination note."></textarea>
+              </label>
+              <button class="primary full" type="submit">Save Medical Details</button>
+            </form>
+          </section>
+          <section class="card">
+            <h2>Medical details</h2>
+            <p class="muted">Saved entries are also added to Submitted Forms for staff review.</p>
+            <div class="list" id="medicalDetailsList"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="infoView">
+        <div class="grid two">
+          <section class="card">
+            <h2>Other Info</h2>
+            <div class="list">
+              <div class="item"><strong>Volunteer coordination</strong><p class="muted small">Track available volunteers for Tuesday sessions and Sunday support sessions.</p></div>
+              <div class="item"><strong>Partner referrals</strong><p class="muted small">Capture community partner referrals and route them to the appropriate program coordinator.</p></div>
+              <div class="item"><strong>Donor follow-up</strong><p class="muted small">Use event participation and monthly impact metrics in donor updates and board reporting.</p></div>
+            </div>
+          </section>
+          <section class="card">
+            <h2>Program categories</h2>
+            <div class="program-categories">
+              <span class="pill purple">Care navigation</span>
+              <span class="pill green">Community health</span>
+              <span class="pill warn">Resource referrals</span>
+            </div>
+            <p class="muted">These areas can later become full modules as the app grows beyond the calendar and registration MVP.</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="formsView">
+        <div class="card">
+          <div class="automation-row" style="margin-bottom:12px">
+            <div>
+              <h2>Submitted forms</h2>
+              <p class="muted" style="margin-bottom:0">Registration and intake forms submitted through the calendar workflow.</p>
+            </div>
+            <div class="button-row"><button class="secondary" type="button" onclick="seedDemoForms()">Add demo form</button><button class="danger" type="button" onclick="resetDemoData()">Reset demo</button></div>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>Submitted</th><th>Type</th><th>Name</th><th>Related event</th></tr></thead><tbody id="formsTable"></tbody></table></div>
+        </div>
+      </section>
+
+      <section class="view" id="analyticsView">
+        <div class="grid cards">
+          <article class="card metric"><div class="label">Monthly registrations</div><div class="value" id="analyticsRegistrations">0</div><div class="trend">Across all events</div></article>
+          <article class="card metric"><div class="label">Care navigation</div><div class="value" id="analyticsTuesday">0</div><div class="trend">Tuesday program</div></article>
+          <article class="card metric"><div class="label">Community support</div><div class="value" id="analyticsSunday">0</div><div class="trend">Sunday program</div></article>
+          <article class="card metric"><div class="label">Open forms</div><div class="value" id="analyticsOpenForms">0</div><div class="trend">Awaiting review</div></article>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <h2>Analytics summary</h2>
+          <p class="muted">Reports renamed to Analytics. In production, this would include monthly impact metrics, response times, referral sources, volunteer hours, and grant-ready exports.</p>
+          <div class="table-wrap"><table><thead><tr><th>Metric</th><th>This month</th><th>Use case</th></tr></thead><tbody><tr><td>People registered</td><td id="analyticsPeople">0</td><td>Board updates and program planning</td></tr><tr><td>Events scheduled</td><td id="analyticsEvents">0</td><td>Staffing and volunteer coordination</td></tr><tr><td>Forms awaiting review</td><td id="analyticsForms">0</td><td>Operations follow-up</td></tr></tbody></table></div>
+        </div>
+      </section>
+
+      <section class="view" id="automationView">
+        <div class="grid two">
+          <section class="card">
+            <h2>Automation</h2>
+            <p class="muted">Similar to the original automation/forms view: submitted registrations create internal queue items, reminders, and follow-up tasks.</p>
+            <div class="list">
+              <div class="automation-card"><div class="automation-row"><strong>Registration confirmation</strong><span class="pill green">Enabled</span></div><div class="muted small">Send confirmation email after an event registration.</div></div>
+              <div class="automation-card"><div class="automation-row"><strong>Staff follow-up task</strong><span class="pill green">Enabled</span></div><div class="muted small">Create a submitted form record and route it for review.</div></div>
+              <div class="automation-card"><div class="automation-row"><strong>Weekly event digest</strong><span class="pill warn">Planned</span></div><div class="muted small">Summarize upcoming care events, volunteers, and registrations.</div></div>
+            </div>
+          </section>
+          <section class="card">
+            <h2>Latest submitted forms</h2>
+            <div class="list" id="automationFormsList"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <template id="registrationFormTemplate">
+    <form class="registration-form" style="display:grid;gap:10px;margin-top:12px">
+      <input name="name" placeholder="Full name" required />
+      <input name="email" placeholder="Email or phone" required />
+      <select name="need">
+        <option>Care navigation</option>
+        <option>Medical information</option>
+        <option>Referral support</option>
+        <option>Volunteer interest</option>
+        <option>Transportation or access help</option>
+      </select>
+      <textarea name="notes" placeholder="Anything staff should know?"></textarea>
+      <button class="primary" type="submit">Register</button>
+    </form>
+  </template>
+
+  <script>
+    const navItems = [
+      ['calendar', 'Care Calendar', ''],
+      ['registrations', 'Registrations', ''],
+      ['medical', 'Medical Information', ''],
+      ['forms', 'Submitted Forms', '']
+    ];
+
+    const titles = {
+      calendar: ['Care Calendar', 'Tuesday and Sunday nonprofit care events with registration.'],
+      registrations: ['Registrations', 'People registered for care events.'],
+      medical: ['Medical Information', 'Care coordination information and privacy notes.'],
+      forms: ['Submitted Forms', 'Forms submitted from registrations and intake workflows.']
+    };
+
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    let activeView = 'calendar';
+    let viewDate = new Date();
+    let selectedDate = startOfDay(new Date());
+    let registrations = load('healthbase-calendar-registrations', []);
+    let forms = load('healthbase-calendar-forms', []);
+    let medicalDetails = load('healthbase-medical-details', []);
+    let events = buildCareEvents();
+    let highlightedEventId = null;
+
+    const desktopNav = document.getElementById('desktopNav');
+    const mobileNav = document.getElementById('mobileNav');
+    const monthTitle = document.getElementById('monthTitle');
+    const todayLabel = document.getElementById('todayLabel');
+    const dayNamesEl = document.getElementById('dayNames');
+    const grid = document.getElementById('calendarGrid');
+    const selectedTitle = document.getElementById('selectedTitle');
+    const eventList = document.getElementById('eventList');
+
+    function init() {
+      desktopNav.innerHTML = navHtml();
+      mobileNav.innerHTML = navHtml(true);
+      dayNamesEl.innerHTML = dayNames.map(day => `<div class="day-name">${day}</div>`).join('');
+      document.getElementById('prevBtn').addEventListener('click', () => changeMonth(-1));
+      document.getElementById('nextBtn').addEventListener('click', () => changeMonth(1));
+      document.getElementById('medicalDetailsForm').addEventListener('submit', handleMedicalDetailsSubmit);
+      render();
+    }
+
+    function navHtml(mobile = false) {
+      return navItems.map(([id, label]) => `<button class="nav-button ${id === activeView ? 'active' : ''}" type="button" onclick="setView('${id}')"><span>${label}</span></button>`).join('');
+    }
+
+    function setView(id) {
+      activeView = id;
+      document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+      document.getElementById(id + 'View').classList.add('active');
+      document.querySelectorAll('.nav-button').forEach(button => button.classList.remove('active'));
+      document.querySelectorAll(`.nav-button[onclick="setView('${id}')"]`).forEach(button => button.classList.add('active'));
+      document.getElementById('pageTitle').textContent = titles[id][0];
+      document.getElementById('pageSubtitle').textContent = titles[id][1];
+      render();
+      if (window.innerWidth < 780) {
+        const active = document.querySelector('.mobile-nav .nav-button.active');
+        if (active) active.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      }
+    }
+
+    function buildCareEvents() {
+      const result = {};
+      const start = new Date();
+      start.setMonth(start.getMonth() - 1);
+      start.setDate(1);
+      const end = new Date();
+      end.setMonth(end.getMonth() + 4);
+      end.setDate(31);
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const day = d.getDay();
+        const key = dateKey(d);
+        if (day === 2) {
+          result[key] = result[key] || [];
+          result[key].push({
+            id: 'care-nav-' + key,
+            title: 'Care Navigation',
+            type: 'Tuesday',
+            date: key,
+            time: '10:00',
+            location: 'HealthBase Care Center',
+            notes: 'Help with intake, eligibility, referrals, benefits navigation, and follow-up planning.'
+          });
+        }
+        if (day === 0) {
+          result[key] = result[key] || [];
+          result[key].push({
+            id: 'community-' + key,
+            title: 'Community Health Support',
+            type: 'Sunday',
+            date: key,
+            time: '13:00',
+            location: 'Community Resource Room',
+            notes: 'Wellness support, medical information, food/resource referrals, and family assistance.'
+          });
+        }
+      }
+      return result;
+    }
+
+    function changeMonth(offset) {
+      viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + offset, 1);
+      renderCalendar();
+    }
+
+    function goToday() {
+      viewDate = new Date();
+      selectedDate = startOfDay(new Date());
+      highlightedEventId = null;
+      setView('calendar');
+    }
+
+    function registerForNextEvent() {
+      const next = upcomingEvents(1)[0];
+      if (!next) {
+        setView('calendar');
+        toast('No upcoming care events are currently scheduled.');
+        return;
+      }
+      highlightedEventId = next.id;
+      selectedDate = startOfDay(parseDate(next.date));
+      viewDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+      setView('calendar');
+      window.requestAnimationFrame(() => {
+        const form = document.querySelector(`.registration-form[data-event-id="${next.id}"]`);
+        const target = form || document.getElementById('eventList');
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        const firstInput = form ? form.querySelector('input[name="name"]') : null;
+        if (firstInput) setTimeout(() => firstInput.focus({ preventScroll: true }), 350);
+        toast(`Ready to register for ${next.title}`);
+      });
+    }
+
+    function render() {
+      renderBadges();
+      renderDashboard();
+      renderCalendar();
+      renderRegistrations();
+      renderMedicalDetails();
+      renderForms();
+      renderAnalytics();
+      renderAutomation();
+    }
+
+    function renderBadges() {
+      // Sidebar/mobile navigation intentionally shows labels only.
+      // Counts are displayed inside the dashboard and page content instead.
+    }
+
+    function upcomingEvents(limit = 6) {
+      const today = startOfDay(new Date());
+      return Object.values(events).flat().filter(e => startOfDay(parseDate(e.date)) >= today).sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time)).slice(0, limit);
+    }
+
+    function renderDashboard() {
+      document.getElementById('upcomingCount').textContent = upcomingEvents(99).length;
+      document.getElementById('registrationCount').textContent = registrations.length;
+      document.getElementById('openFormsCount').textContent = forms.filter(f => f.status !== 'Completed').length;
+      const target = document.getElementById('nextEventsList');
+      target.innerHTML = upcomingEvents(4).map(e => `
+        <div class="item">
+          <div class="item-top"><strong>${escapeHtml(e.title)}</strong><span class="pill ${e.type === 'Sunday' ? 'green' : 'purple'}">${e.type}</span></div>
+          <div class="muted small">${formatDate(parseDate(e.date))} · ${escapeHtml(e.time)} · ${escapeHtml(e.location)}</div>
+          <p class="muted small" style="margin:8px 0 0">${escapeHtml(e.notes)}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderCalendar() {
+      if (!monthTitle) return;
+      monthTitle.textContent = viewDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+      todayLabel.textContent = `Today is ${new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}`;
+      selectedTitle.textContent = selectedDate.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+
+      const firstOfMonth = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
+      const start = new Date(firstOfMonth);
+      start.setDate(start.getDate() - start.getDay());
+
+      grid.innerHTML = '';
+      for (let i = 0; i < 42; i++) {
+        const date = new Date(start);
+        date.setDate(start.getDate() + i);
+        const key = dateKey(date);
+        const cell = document.createElement('button');
+        cell.type = 'button';
+        cell.className = 'cell';
+        if (date.getMonth() !== viewDate.getMonth()) cell.classList.add('muted');
+        if (sameDay(date, selectedDate)) cell.classList.add('selected');
+        if (sameDay(date, new Date())) cell.classList.add('today');
+        const chips = (events[key] || []).slice(0, 3).map(e => `<span class="event-chip ${e.type === 'Sunday' ? 'sunday' : 'tuesday'}">${escapeHtml(e.time + ' ' + e.title)}</span>`).join('');
+        cell.innerHTML = `<span class="date-number">${date.getDate()}</span>${chips}`;
+        cell.addEventListener('click', () => {
+          selectedDate = startOfDay(date);
+          viewDate = new Date(date.getFullYear(), date.getMonth(), 1);
+          renderCalendar();
+        });
+        grid.appendChild(cell);
+      }
+      renderSelectedEvents();
+    }
+
+    function renderSelectedEvents() {
+      const items = events[dateKey(selectedDate)] || [];
+      if (!items.length) {
+        eventList.innerHTML = '<div class="empty">No HealthBase Care events on this day. Select a Wednesday or Sunday.</div>';
+        return;
+      }
+      eventList.innerHTML = items.map(event => {
+        const count = registrations.filter(r => r.eventId === event.id).length;
+        return `<div class="event-card ${event.id === highlightedEventId ? 'featured-event' : ''}">
+          <div class="item-top"><strong>${escapeHtml(event.title)}</strong><span class="pill ${event.type === 'Sunday' ? 'green' : 'purple'}">${event.type}</span></div>
+          <small>${formatDate(parseDate(event.date))} · ${escapeHtml(event.time)} · ${escapeHtml(event.location)}</small>
+          <p>${escapeHtml(event.notes)}</p>
+          <div class="muted small">${count} registered</div>
+          ${registrationForm(event)}
+        </div>`;
+      }).join('');
+      document.querySelectorAll('.registration-form').forEach(form => {
+        form.addEventListener('submit', handleRegistrationSubmit);
+      });
+    }
+
+    function registrationForm(event) {
+      return `<form class="registration-form" data-event-id="${event.id}" style="display:grid;gap:10px;margin-top:12px">
+        <input name="name" placeholder="Full name" required />
+        <input name="email" placeholder="Email or phone" required />
+        <select name="need">
+          <option>Care navigation</option>
+          <option>Medical information</option>
+          <option>Referral support</option>
+          <option>Volunteer interest</option>
+          <option>Transportation or access help</option>
+        </select>
+        <textarea name="notes" placeholder="Anything staff should know?"></textarea>
+        <button class="primary" type="submit">Register</button>
+      </form>`;
+    }
+
+    function handleRegistrationSubmit(e) {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const event = Object.values(events).flat().find(item => item.id === form.dataset.eventId);
+      const data = Object.fromEntries(new FormData(form).entries());
+      const registration = {
+        id: randomId(),
+        name: data.name.trim(),
+        email: data.email.trim(),
+        need: data.need,
+        notes: data.notes.trim(),
+        eventId: event.id,
+        eventTitle: event.title,
+        eventDate: event.date,
+        eventTime: event.time,
+        submittedAt: new Date().toISOString(),
+        status: 'Registered'
+      };
+      if (!registration.name || !registration.email) return;
+      registrations.unshift(registration);
+      forms.unshift({
+        id: randomId(),
+        submittedAt: registration.submittedAt,
+        type: 'Event registration',
+        name: registration.name,
+        contact: registration.email,
+        relatedEvent: `${event.title} — ${formatDate(parseDate(event.date))}`,
+        need: registration.need,
+        notes: registration.notes,
+        status: 'New'
+      });
+      save('healthbase-calendar-registrations', registrations);
+      save('healthbase-calendar-forms', forms);
+      form.reset();
+      toast(`${registration.name} registered for ${event.title}`);
+      render();
+    }
+
+    function handleMedicalDetailsSubmit(e) {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const data = Object.fromEntries(new FormData(form).entries());
+      const entry = {
+        id: randomId(),
+        submittedAt: new Date().toISOString(),
+        name: data.name.trim(),
+        contact: data.contact.trim(),
+        notes: data.notes.trim(),
+        status: 'New'
+      };
+      if (!entry.name || !entry.contact) return;
+      medicalDetails.unshift(entry);
+      forms.unshift({
+        id: randomId(),
+        submittedAt: entry.submittedAt,
+        type: 'Medical information',
+        name: entry.name,
+        contact: entry.contact,
+        relatedEvent: 'Medical details intake',
+        need: 'Medical information',
+        notes: entry.notes,
+        status: 'New'
+      });
+      save('healthbase-medical-details', medicalDetails);
+      save('healthbase-calendar-forms', forms);
+      form.reset();
+      toast(`Medical details saved for ${entry.name}`);
+      render();
+    }
+
+    function renderMedicalDetails() {
+      const list = document.getElementById('medicalDetailsList');
+      if (!list) return;
+      list.innerHTML = medicalDetails.slice(0, 5).map(item => `
+        <div class="item">
+          <div class="item-top"><strong>${escapeHtml(item.name)}</strong><span class="pill green">Saved</span></div>
+          <div class="muted small">${escapeHtml(item.contact)}</div>
+          ${item.notes ? `<p class="muted small" style="margin:8px 0 0">${escapeHtml(item.notes)}</p>` : ''}
+        </div>
+      `).join('') || '<div class="empty">No medical details submitted yet.</div>';
+    }
+
+    function renderRegistrations() {
+      const tbody = document.getElementById('registrationsTable');
+      tbody.innerHTML = registrations.length ? registrations.map(r => `<tr><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.eventTitle)}</td><td>${formatDate(parseDate(r.eventDate))}</td><td>${escapeHtml(r.email)}</td><td>${escapeHtml(r.need)}</td><td><span class="pill green">${escapeHtml(r.status)}</span></td></tr>`).join('') : `<tr><td colspan="6" class="muted">No registrations yet. Register from the Care Calendar.</td></tr>`;
+    }
+
+    function renderForms() {
+      const tbody = document.getElementById('formsTable');
+      tbody.innerHTML = forms.length ? forms.map(f => `<tr><td>${formatDateTime(f.submittedAt)}</td><td>${escapeHtml(f.type)}</td><td>${escapeHtml(f.name)}</td><td>${escapeHtml(f.relatedEvent)}</td></tr>`).join('') : `<tr><td colspan="4" class="muted">No submitted forms yet.</td></tr>`;
+    }
+
+    function advanceForm(id) {
+      forms = forms.map(f => f.id === id ? { ...f, status: f.status === 'New' ? 'In Review' : f.status === 'In Review' ? 'Completed' : 'New' } : f);
+      save('healthbase-calendar-forms', forms);
+      render();
+    }
+
+    function resetDemoData() {
+      registrations = [];
+      forms = [];
+      medicalDetails = [];
+      highlightedEventId = null;
+      localStorage.removeItem('healthbase-calendar-registrations');
+      localStorage.removeItem('healthbase-calendar-forms');
+      localStorage.removeItem('healthbase-medical-details');
+      toast('Demo data reset');
+      render();
+    }
+
+    function seedDemoForms() {
+      forms.unshift({ id: randomId(), submittedAt: new Date().toISOString(), type: 'General inquiry', name: 'Jordan Rivera', contact: 'jordan@example.org', relatedEvent: 'Community Health Support', need: 'Medical information', notes: 'Asked about Sunday resources.', status: 'New' });
+      save('healthbase-calendar-forms', forms);
+      toast('Demo form added');
+      render();
+    }
+
+    function renderAnalytics() {
+      const monthKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+      const thisMonthRegs = registrations.filter(r => r.eventDate.startsWith(monthKey));
+      const tuesday = thisMonthRegs.filter(r => r.eventTitle.includes('Care Navigation')).length;
+      const sunday = thisMonthRegs.filter(r => r.eventTitle.includes('Community Health')).length;
+      const openForms = forms.filter(f => f.status !== 'Completed').length;
+      document.getElementById('analyticsRegistrations').textContent = thisMonthRegs.length;
+      document.getElementById('analyticsTuesday').textContent = tuesday;
+      document.getElementById('analyticsSunday').textContent = sunday;
+      document.getElementById('analyticsOpenForms').textContent = openForms;
+      document.getElementById('analyticsPeople').textContent = registrations.length;
+      document.getElementById('analyticsEvents').textContent = upcomingEvents(99).length;
+      document.getElementById('analyticsForms').textContent = openForms;
+    }
+
+    function renderAutomation() {
+      const list = document.getElementById('automationFormsList');
+      list.innerHTML = forms.slice(0, 5).map(f => `<div class="item"><div class="item-top"><strong>${escapeHtml(f.name)}</strong><span class="pill ${f.status === 'Completed' ? 'green' : f.status === 'In Review' ? 'warn' : 'purple'}">${escapeHtml(f.status)}</span></div><div class="muted small">${escapeHtml(f.type)} · ${escapeHtml(f.relatedEvent)}</div><p class="muted small" style="margin:8px 0 0">${escapeHtml(f.need)}</p></div>`).join('') || '<div class="empty">No submitted forms yet.</div>';
+    }
+
+    function parseDate(key) {
+      const [y, m, d] = key.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+    function dateKey(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
+    function startOfDay(date) { return new Date(date.getFullYear(), date.getMonth(), date.getDate()); }
+    function sameDay(a, b) { return dateKey(a) === dateKey(b); }
+    function formatDate(date) { return date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); }
+    function formatDateTime(iso) { return new Date(iso).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); }
+    function randomId() { return (crypto.randomUUID && crypto.randomUUID()) || String(Date.now() + Math.random()); }
+    function load(key, fallback) { try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch { return fallback; } }
+    function save(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+    function escapeHtml(value) { return String(value || '').replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c])); }
+    function toast(message) {
+      const el = document.getElementById('toast');
+      el.textContent = message;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2600);
+    }
+
+    init();
+  </script>
+</body>
+</html>
