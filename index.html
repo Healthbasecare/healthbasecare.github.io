@@ -781,12 +781,10 @@
         return;
       }
       eventList.innerHTML = items.map(event => {
-        const count = registrations.filter(r => r.eventId === event.id).length;
         return `<div class="event-card ${event.id === highlightedEventId ? 'featured-event' : ''}">
           <div class="item-top"><strong>${escapeHtml(event.title)}</strong><span class="pill ${event.type === 'Sunday' ? 'green' : 'purple'}">${event.type}</span></div>
           <small>${formatDate(parseDate(event.date))} · ${escapeHtml(event.time)} · ${escapeHtml(event.location)}</small>
           <p>${escapeHtml(event.notes)}</p>
-          <div class="muted small">${count} registered</div>
           ${registrationForm(event)}
         </div>`;
       }).join('');
