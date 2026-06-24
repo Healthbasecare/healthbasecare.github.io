@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>HealthBase Care Calendar Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nonprofit Operations Platform Concept</title>
   <style>
     :root {
       --bg: #f5f7fb;
@@ -14,18 +14,13 @@
       --accent: #315efb;
       --accent-soft: #edf1ff;
       --success: #1a8f5a;
-      --success-soft: #eaf8f0;
       --warn: #b7791f;
-      --warn-soft: #fff7e6;
       --danger: #b42318;
-      --danger-soft: #fff3f2;
       --purple: #7451eb;
-      --purple-soft: #f1edff;
       --shadow: 0 16px 40px rgba(23, 32, 51, .08);
     }
 
     * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
     body {
       margin: 0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -34,14 +29,13 @@
     }
 
     .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-    .sidebar {
+    aside {
       background: #111827;
       color: white;
       padding: 24px 18px;
       position: sticky;
       top: 0;
       height: 100vh;
-      overflow-y: auto;
     }
     .brand { font-weight: 800; font-size: 20px; letter-spacing: -.02em; margin-bottom: 6px; }
     .subtitle { color: #a7b0c2; font-size: 13px; margin-bottom: 24px; line-height: 1.35; }
@@ -59,32 +53,24 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
     }
     .nav-button:hover, .nav-button.active { background: rgba(255,255,255,.1); color: white; }
-    .badge { background: #263246; color: #d9e2f3; border-radius: 999px; padding: 2px 8px; font-size: 12px; white-space: nowrap; }
-    .mobile-header { display: none; }
-    main { padding: 28px; min-width: 0; }
+    .badge { background: #263246; color: #d9e2f3; border-radius: 999px; padding: 2px 8px; font-size: 12px; }
+    main { padding: 28px; }
     .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
     h1 { margin: 0; font-size: 28px; letter-spacing: -.035em; }
-    h2 { margin: 0 0 12px; font-size: 20px; letter-spacing: -.02em; }
-    h3 { margin: 0 0 8px; font-size: 16px; }
-    p { margin-top: 0; }
     .muted { color: var(--muted); }
     .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .actions.hidden { display: none; }
-    button.primary, button.secondary, button.danger, button.success {
+    button.primary, button.secondary, button.danger {
       border: 0;
       border-radius: 12px;
       padding: 11px 14px;
       cursor: pointer;
       font-weight: 650;
-      min-height: 42px;
     }
     button.primary { background: var(--accent); color: white; }
     button.secondary { background: var(--panel); color: var(--ink); border: 1px solid var(--line); }
-    button.danger { background: var(--danger-soft); color: var(--danger); border: 1px solid #ffd5d2; }
-    button.success { background: var(--success); color: white; }
+    button.danger { background: #fff3f2; color: var(--danger); border: 1px solid #ffd5d2; }
     .grid { display: grid; gap: 18px; }
     .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .two { grid-template-columns: 1.25fr .75fr; align-items: start; }
@@ -95,878 +81,350 @@
       border-radius: 18px;
       padding: 18px;
       box-shadow: var(--shadow);
-      min-width: 0;
     }
-    .metric .label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
-    .metric .value { font-size: 30px; font-weight: 800; letter-spacing: -.04em; }
-    .metric .trend { font-size: 13px; margin-top: 6px; color: var(--success); }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border-radius: 999px;
-      padding: 5px 9px;
-      font-size: 12px;
-      font-weight: 700;
-      background: var(--accent-soft);
-      color: #1d3db8;
-      white-space: nowrap;
-    }
-    .pill.green { background: var(--success-soft); color: var(--success); }
-    .pill.warn { background: var(--warn-soft); color: var(--warn); }
-    .pill.purple { background: var(--purple-soft); color: var(--purple); }
-    .pill.red { background: var(--danger-soft); color: var(--danger); }
-    .program-categories {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 10px 0 14px;
-      align-items: center;
-    }
-    .program-categories .pill {
-      padding: 8px 12px;
-      font-size: 13px;
-    }
-
-    .view { display: none; }
-    .view.active { display: block; }
-
-    .toolbar-note {
-      background: linear-gradient(135deg, #edf1ff, #f4fbff);
-      border: 1px solid #dfe7ff;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 18px;
-    }
-
-    table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .metric-label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+    .metric-value { font-size: 30px; font-weight: 800; letter-spacing: -.04em; }
+    .metric-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .section-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 14px; }
+    h2 { margin: 0; font-size: 18px; letter-spacing: -.02em; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 12px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
     th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-    input, textarea, select {
+    tr:hover td { background: #fafbff; }
+    .pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 700; }
+    .new { background: #fff3d6; color: var(--warn); }
+    .review { background: var(--accent-soft); color: var(--accent); }
+    .done { background: #e9f8f0; color: var(--success); }
+    .urgent { background: #fff0ef; color: var(--danger); }
+    .chip { display:inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 5px 9px; font-size: 12px; color: var(--muted); background:white; }
+    .list { display: grid; gap: 10px; }
+    .item { border: 1px solid var(--line); border-radius: 14px; padding: 13px; background: #fff; }
+    .item-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom: 5px; }
+    .item strong { display:block; }
+    .small { font-size: 13px; color: var(--muted); line-height: 1.35; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); font-weight: 650; }
+    input, select, textarea {
       width: 100%;
-      border: 1px solid #d9deea;
+      border: 1px solid var(--line);
       border-radius: 12px;
       padding: 11px 12px;
       font: inherit;
+      color: var(--ink);
       background: white;
     }
     textarea { min-height: 86px; resize: vertical; }
-    label { display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #364154; }
-    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
     .full { grid-column: 1 / -1; }
-
-    .calendar-shell {
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      min-height: 660px;
-      overflow: hidden;
-    }
-    .calendar-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding-bottom: 18px;
-    }
-    .calendar-panel { padding: 18px; }
-    .month-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .calendar-scroll { width: 100%; overflow: hidden; }
-    .days, .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      width: 100%;
-    }
-    .calendar-grid { grid-auto-rows: minmax(112px, auto); }
-    .day-name {
-      min-width: 0;
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding-bottom: 10px;
-    }
-    .cell {
-      min-height: 112px;
-      padding: 9px;
-      border: 1px solid #edf0f7;
-      background: #fff;
-      position: relative;
-      cursor: pointer;
-      text-align: left;
-      color: inherit;
-      font: inherit;
-      border-radius: 0;
-      appearance: none;
-      -webkit-appearance: none;
-      width: 100%;
-      min-width: 0;
-      max-width: 100%;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
-    }
-    .cell:hover { background: #f9fbff; }
-    .cell.muted { color: #a3aab8; background: #fafbfe; }
-    .cell.selected { outline: 3px solid var(--accent); outline-offset: -3px; z-index: 1; }
-    .date-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      flex: 0 0 28px;
-      border-radius: 50%;
-      font-weight: 800;
-      font-size: 14px;
-      line-height: 1;
-    }
-    .today .date-number {
-      background: var(--accent);
-      color: white;
-    }
-    .event-chip {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      margin-top: 0;
-      padding: 4px 6px;
-      border-radius: 8px;
-      background: #eaf1ff;
-      color: #173b8f;
-      font-size: 12px;
-      line-height: 1.25;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      min-width: 0;
-    }
-    .event-chip.sunday { background: #eefaf2; color: #16653f; }
-    .event-chip.wednesday { background: #f1edff; color: #4f32b5; }
-    .calendar-aside {
-      border-left: 1px solid var(--line);
-      background: #fbfcff;
-      padding: 18px;
-      overflow-y: auto;
-    }
-    .event-card {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-    .event-card strong { display: block; margin-bottom: 4px; }
-    .event-card small { color: var(--muted); }
-    .event-card p { margin: 8px 0 12px; color: #4b5565; }
-    .empty { color: #7a8496; padding: 12px; border: 1px dashed #ccd3df; border-radius: 12px; }
-    .list { display: grid; gap: 12px; }
-    .item {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 14px;
-    }
-    .item-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
-    .small { font-size: 13px; }
-
-    .automation-card {
-      border: 1px solid var(--line);
-      background: white;
-      border-radius: 16px;
-      padding: 16px;
-      display: grid;
-      gap: 8px;
-    }
-    .automation-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-
-    .toast {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      background: #111827;
-      color: white;
-      padding: 12px 14px;
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      display: none;
-      z-index: 30;
-      max-width: calc(100vw - 36px);
-    }
-    .toast.show { display: block; }
-
-    @media (max-width: 1080px) {
-      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .two, .three, .calendar-shell { grid-template-columns: 1fr; }
-      .calendar-aside { border-left: 0; border-top: 1px solid var(--line); }
-    }
-
-    @media (max-width: 780px) {
-      body { background: var(--panel); }
-      .app { display: block; }
-      .sidebar { display: none; }
-      .mobile-header {
-        display: block;
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        background: #111827;
-        color: white;
-        padding: 14px 12px 10px;
-        box-shadow: 0 8px 22px rgba(17,24,39,.22);
-      }
-      .mobile-title { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 10px; }
-      .mobile-nav {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 2px;
-      }
-      .mobile-nav .nav-button {
-        width: auto;
-        min-width: max-content;
-        padding: 10px 12px;
-        background: rgba(255,255,255,.08);
-      }
-      main { padding: 16px 12px 24px; }
-      .topbar { align-items: flex-start; flex-direction: column; margin-bottom: 16px; }
-      h1 { font-size: 24px; }
-      .cards, .form-grid { grid-template-columns: 1fr; }
-      .card { border-radius: 16px; padding: 15px; box-shadow: none; }
-      .calendar-panel { padding: 14px; }
-      .calendar-header { align-items: flex-start; flex-direction: column; }
-      .month-controls button { flex: 1; min-width: 96px; }
-      .calendar-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-      .days, .calendar-grid { width: 680px; min-width: 680px; max-width: none; }
-      .cell { min-height: 92px; }
-      .calendar-aside { padding: 14px; }
-      .item-top, .automation-row { flex-direction: column; align-items: flex-start; }
-      th, td { white-space: nowrap; }
+    .tabs { display:flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .tab { border: 1px solid var(--line); background:white; color: var(--muted); padding: 9px 12px; border-radius: 999px; cursor:pointer; }
+    .tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .hidden { display: none !important; }
+    .timeline { border-left: 2px solid var(--line); padding-left: 16px; display:grid; gap: 12px; }
+    .timeline .item { position: relative; }
+    .timeline .item:before { content:""; position:absolute; width:10px; height:10px; border-radius:50%; background:var(--accent); left:-22px; top:18px; }
+    .bar { height: 10px; background: #edf0f6; border-radius: 99px; overflow: hidden; margin-top: 8px; }
+    .bar span { display:block; height:100%; background: var(--accent); border-radius: 99px; }
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      .cards, .two, .three, .form-grid { grid-template-columns: 1fr; }
+      main { padding: 18px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
     }
   </style>
 </head>
 <body>
-  <div class="mobile-header">
-    <div class="mobile-title">
+<div class="app">
+  <aside>
+    <div class="brand">HealthBase Care</div>
+    <div class="subtitle">Internal nonprofit intake, workflow, volunteer, donor, and reporting platform concept.</div>
+    <nav id="nav"></nav>
+  </aside>
+
+  <main>
+    <div class="topbar">
       <div>
-        <div class="brand">HealthBase Care</div>
-        <div class="subtitle" style="margin:0">Calendar & care coordination</div>
+        <h1 id="page-title">Dashboard</h1>
+        <div class="muted" id="page-subtitle">Clear view of requests, cases, follow-ups, and impact.</div>
+      </div>
+      <div class="actions">
+        <button class="secondary" onclick="seedDemoData()">Reset Demo</button>
+        <button class="primary" onclick="openView('intake')">+ New Intake</button>
       </div>
     </div>
-    <nav class="mobile-nav" id="mobileNav"></nav>
-  </div>
 
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">HealthBase Care</div>
-      <div class="subtitle">Nonprofit care calendar, registrations, medical information, and submitted forms.</div>
-      <nav id="desktopNav"></nav>
-    </aside>
+    <section id="view-dashboard" class="view"></section>
+    <section id="view-intake" class="view hidden"></section>
+    <section id="view-cases" class="view hidden"></section>
+    <section id="view-volunteers" class="view hidden"></section>
+    <section id="view-donors" class="view hidden"></section>
+    <section id="view-reports" class="view hidden"></section>
+    <section id="view-automation" class="view hidden"></section>
+    <section id="view-security" class="view hidden"></section>
+  </main>
+</div>
 
-    <main>
-      <div class="topbar">
-        <div>
-          <h1 id="pageTitle">Care Calendar</h1>
-          <div class="muted" id="pageSubtitle">Wednesday and Sunday nonprofit care events with registration.</div>
-        </div>
-      </div>
+<script>
+  const navItems = [
+    ['dashboard', 'Dashboard'], ['intake', 'Intake Forms'], ['cases', 'Cases'], ['volunteers', 'Volunteers'],
+    ['donors', 'Donors & Partners'], ['reports', 'Reports'], ['automation', 'Automation'], ['security', 'Security']
+  ];
 
-      <section class="view" id="dashboardView">
-        <div class="grid cards">
-          <article class="card metric">
-            <div class="label">Upcoming care events</div>
-            <div class="value" id="upcomingCount">0</div>
-            <div class="trend">Wednesdays and Sundays</div>
-          </article>
-          <article class="card metric">
-            <div class="label">Registrations</div>
-            <div class="value" id="registrationCount">0</div>
-            <div class="trend">Creates submitted forms</div>
-          </article>
-          <article class="card metric">
-            <div class="label">Open submitted forms</div>
-            <div class="value" id="openFormsCount">0</div>
-            <div class="trend">Ready for staff review</div>
-          </article>
-          <article class="card metric">
-            <div class="label">Volunteer slots</div>
-            <div class="value">8</div>
-            <div class="trend">Needed this month</div>
-          </article>
-        </div>
+  let submissions = [];
+  let volunteers = [];
+  let donors = [];
+  let activity = [];
+  let activeView = 'dashboard';
 
-        <div class="grid two" style="margin-top:18px">
-          <section class="card">
-            <h2>Next care events</h2>
-            <div class="list" id="nextEventsList"></div>
-          </section>
-          <section class="card">
-            <h2>Operating focus</h2>
-            <div class="list">
-              <div class="item"><strong>Care Navigation</strong><p class="muted small">Wednesday support for intake, eligibility review, referrals, and care coordination.</p></div>
-              <div class="item"><strong>Community Health Support</strong><p class="muted small">Sunday support for wellness checks, resource navigation, and family assistance.</p></div>
-              <div class="item"><strong>Submitted forms queue</strong><p class="muted small">Every registration creates a submitted form that staff can review in the Forms page.</p></div>
-            </div>
-          </section>
-        </div>
-      </section>
-
-      <section class="view active" id="calendarView">
-        <div class="card" style="padding:0; overflow:hidden">
-          <div class="calendar-shell">
-            <section class="calendar-panel">
-              <div class="calendar-header">
-                <div>
-                  <h2 id="monthTitle"></h2>
-                  <div class="muted" id="todayLabel"></div>
-                </div>
-                <div class="month-controls">
-                  <button class="secondary" id="prevBtn" type="button">‹ Previous</button>
-                  <button class="secondary" id="nextBtn" type="button">Next ›</button>
-                </div>
-              </div>
-              <div class="calendar-scroll">
-                <div class="days" id="dayNames"></div>
-                <div class="calendar-grid" id="calendarGrid"></div>
-              </div>
-            </section>
-
-            <aside class="calendar-aside">
-              <h2 id="selectedTitle"></h2>
-              <p class="muted">Select a Wednesday or Sunday care event and register below.</p>
-              <div id="eventList"></div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section class="view" id="registrationsView">
-        <div class="card">
-          <h2>Event registrations</h2>
-          <p class="muted">People registered for Wednesday and Sunday nonprofit care events.</p>
-          <div class="table-wrap"><table><thead><tr><th>Name</th><th>Event</th><th>Date</th><th>Contact</th><th>Need</th><th>Status</th></tr></thead><tbody id="registrationsTable"></tbody></table></div>
-        </div>
-      </section>
-
-      <section class="view" id="medicalView">
-        <div class="toolbar-note">
-          <h2>Medical information</h2>
-          <p class="muted" style="margin-bottom:0">Medical intake details for care coordination.</p>
-        </div>
-        <div class="grid two">
-          <section class="card">
-            <h2>Medical details intake</h2>
-            <p class="muted">Use this form to capture basic care-navigation details before or after a community event.</p>
-            <form id="medicalDetailsForm" class="form-grid">
-              <label>Participant name
-                <input name="name" placeholder="Full name" required />
-              </label>
-              <label>Contact
-                <input name="contact" placeholder="Email or phone" required />
-              </label>
-              <label class="full">Notes
-                <textarea name="notes" placeholder="Brief care coordination note."></textarea>
-              </label>
-              <button class="primary full" type="submit">Save Medical Details</button>
-            </form>
-          </section>
-          <section class="card">
-            <h2>Medical details</h2>
-            <p class="muted">Saved entries are also added to Submitted Forms for staff review.</p>
-            <div class="list" id="medicalDetailsList"></div>
-          </section>
-        </div>
-      </section>
-
-      <section class="view" id="infoView">
-        <div class="grid two">
-          <section class="card">
-            <h2>Other Info</h2>
-            <div class="list">
-              <div class="item"><strong>Volunteer coordination</strong><p class="muted small">Track available volunteers for Wednesday sessions and Sunday support sessions.</p></div>
-              <div class="item"><strong>Partner referrals</strong><p class="muted small">Capture community partner referrals and route them to the appropriate program coordinator.</p></div>
-              <div class="item"><strong>Donor follow-up</strong><p class="muted small">Use event participation and monthly impact metrics in donor updates and board reporting.</p></div>
-            </div>
-          </section>
-          <section class="card">
-            <h2>Program categories</h2>
-            <div class="program-categories">
-              <span class="pill purple">Care navigation</span>
-              <span class="pill green">Community health</span>
-              <span class="pill warn">Resource referrals</span>
-            </div>
-            <p class="muted">These areas can later become full modules as the app grows beyond the calendar and registration MVP.</p>
-          </section>
-        </div>
-      </section>
-
-      <section class="view" id="formsView">
-        <div class="card">
-          <div class="automation-row" style="margin-bottom:12px">
-            <div>
-              <h2>Submitted forms</h2>
-              <p class="muted" style="margin-bottom:0">Registration and intake forms submitted through the calendar workflow.</p>
-            </div>
-            <div class="button-row"><button class="secondary" type="button" onclick="seedDemoForms()">Add demo form</button><button class="danger" type="button" onclick="resetDemoData()">Reset demo</button></div>
-          </div>
-          <div class="table-wrap"><table><thead><tr><th>Submitted</th><th>Type</th><th>Name</th><th>Related event</th></tr></thead><tbody id="formsTable"></tbody></table></div>
-        </div>
-      </section>
-
-      <section class="view" id="analyticsView">
-        <div class="grid cards">
-          <article class="card metric"><div class="label">Monthly registrations</div><div class="value" id="analyticsRegistrations">0</div><div class="trend">Across all events</div></article>
-          <article class="card metric"><div class="label">Care navigation</div><div class="value" id="analyticsWednesday">0</div><div class="trend">Wednesday program</div></article>
-          <article class="card metric"><div class="label">Community support</div><div class="value" id="analyticsSunday">0</div><div class="trend">Sunday program</div></article>
-          <article class="card metric"><div class="label">Open forms</div><div class="value" id="analyticsOpenForms">0</div><div class="trend">Awaiting review</div></article>
-        </div>
-        <div class="card" style="margin-top:18px">
-          <h2>Analytics summary</h2>
-          <p class="muted">Reports renamed to Analytics. In production, this would include monthly impact metrics, response times, referral sources, volunteer hours, and grant-ready exports.</p>
-          <div class="table-wrap"><table><thead><tr><th>Metric</th><th>This month</th><th>Use case</th></tr></thead><tbody><tr><td>People registered</td><td id="analyticsPeople">0</td><td>Board updates and program planning</td></tr><tr><td>Events scheduled</td><td id="analyticsEvents">0</td><td>Staffing and volunteer coordination</td></tr><tr><td>Forms awaiting review</td><td id="analyticsForms">0</td><td>Operations follow-up</td></tr></tbody></table></div>
-        </div>
-      </section>
-
-      <section class="view" id="automationView">
-        <div class="grid two">
-          <section class="card">
-            <h2>Automation</h2>
-            <p class="muted">Similar to the original automation/forms view: submitted registrations create internal queue items, reminders, and follow-up tasks.</p>
-            <div class="list">
-              <div class="automation-card"><div class="automation-row"><strong>Registration confirmation</strong><span class="pill green">Enabled</span></div><div class="muted small">Send confirmation email after an event registration.</div></div>
-              <div class="automation-card"><div class="automation-row"><strong>Staff follow-up task</strong><span class="pill green">Enabled</span></div><div class="muted small">Create a submitted form record and route it for review.</div></div>
-              <div class="automation-card"><div class="automation-row"><strong>Weekly event digest</strong><span class="pill warn">Planned</span></div><div class="muted small">Summarize upcoming care events, volunteers, and registrations.</div></div>
-            </div>
-          </section>
-          <section class="card">
-            <h2>Latest submitted forms</h2>
-            <div class="list" id="automationFormsList"></div>
-          </section>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <template id="registrationFormTemplate">
-    <form class="registration-form" style="display:grid;gap:10px;margin-top:12px">
-      <input name="name" placeholder="Full name" required />
-      <input name="email" placeholder="Email or phone" required />
-      <select name="need">
-        <option>Care navigation</option>
-        <option>Medical information</option>
-        <option>Referral support</option>
-        <option>Volunteer interest</option>
-        <option>Transportation or access help</option>
-      </select>
-      <textarea name="notes" placeholder="Anything staff should know?"></textarea>
-      <button class="primary" type="submit">Register</button>
-    </form>
-  </template>
-
-  <script>
-    const navItems = [
-      ['calendar', 'Care Calendar', ''],
-      ['registrations', 'Registrations', ''],
-      ['medical', 'Medical Information', ''],
-      ['forms', 'Submitted Forms', '']
+  function seedDemoData() {
+    submissions = [
+      { id: 1001, name: 'Maria Lopez', type: 'Request for services', priority: 'Urgent', assigned: 'Ava Chen', status: 'New', due: 'Today', email: 'maria@example.org', notes: 'Needs rental assistance and food support. Submitted through website.' },
+      { id: 1002, name: 'Bright Path Church', type: 'Community partner referral', priority: 'Normal', assigned: 'Sam Patel', status: 'In Review', due: 'Tomorrow', email: 'partner@example.org', notes: 'Referral for family of four. Eligibility review pending.' },
+      { id: 1003, name: 'Jordan Kim', type: 'Volunteer application', priority: 'Normal', assigned: 'Leah Stone', status: 'New', due: '2 days', email: 'jordan@example.org', notes: 'Available Saturdays. Skills: Spanish, tutoring, logistics.' },
+      { id: 1004, name: 'Civic Foundation', type: 'Donation inquiry', priority: 'Normal', assigned: 'Nora Bell', status: 'Completed', due: 'Done', email: 'giving@example.org', notes: 'Asked about sponsorship package. Thank-you email sent.' }
     ];
+    volunteers = [
+      { name: 'Jordan Kim', status: 'Application', hours: 0, availability: 'Sat AM', skills: 'Spanish, tutoring', check: 'Pending' },
+      { name: 'Maya Rivers', status: 'Active', hours: 42, availability: 'Wed PM', skills: 'Food pantry, data entry', check: 'Cleared' },
+      { name: 'Owen Brown', status: 'Active', hours: 18, availability: 'Flexible', skills: 'Events, driving', check: 'Cleared' }
+    ];
+    donors = [
+      { name: 'Civic Foundation', type: 'Grant maker', total: '$25,000', next: 'Grant report due Jul 15', status: 'Active' },
+      { name: 'Northside Market', type: 'Sponsor', total: '$4,500', next: 'Renewal call', status: 'Warm' },
+      { name: 'Elena Walsh', type: 'Individual donor', total: '$1,200', next: 'Send annual impact note', status: 'Active' }
+    ];
+    activity = [
+      'Confirmation email sent to Maria Lopez',
+      'Urgent intake assigned to Ava Chen',
+      'Volunteer application created for Jordan Kim',
+      'Donation inquiry marked completed'
+    ];
+    save(); render();
+  }
 
-    const titles = {
-      calendar: ['Care Calendar', 'Wednesday and Sunday nonprofit care events with registration.'],
-      registrations: ['Registrations', 'People registered for care events.'],
-      medical: ['Medical Information', 'Care coordination information and privacy notes.'],
-      forms: ['Submitted Forms', 'Forms submitted from registrations and intake workflows.']
+  function save() {
+    localStorage.setItem('careops-demo', JSON.stringify({ submissions, volunteers, donors, activity }));
+  }
+
+  function load() {
+    const raw = localStorage.getItem('careops-demo');
+    if (raw) {
+      const data = JSON.parse(raw);
+      submissions = data.submissions || [];
+      volunteers = data.volunteers || [];
+      donors = data.donors || [];
+      activity = data.activity || [];
+    } else seedDemoData();
+  }
+
+  function statusClass(status, priority) {
+    if (priority === 'Urgent') return 'urgent';
+    if (status === 'New') return 'new';
+    if (status === 'In Review') return 'review';
+    return 'done';
+  }
+
+  function openView(view) {
+    activeView = view;
+    document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+    document.getElementById(`view-${view}`).classList.remove('hidden');
+    document.querySelectorAll('.nav-button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+    const title = navItems.find(n => n[0] === view)[1];
+    document.getElementById('page-title').textContent = title;
+    const subtitles = {
+      dashboard: 'Clear view of requests, cases, follow-ups, and impact.',
+      intake: 'Capture website submissions and route them into workflow.',
+      cases: 'Track clients, notes, documents, eligibility, referrals, and outcomes.',
+      volunteers: 'Manage applications, availability, checks, shifts, and service hours.',
+      donors: 'Lightweight CRM for donors, sponsors, grants, and community partners.',
+      reports: 'Operational and impact metrics for board updates and grants.',
+      automation: 'Email confirmations, reminders, weekly summaries, and status updates.',
+      security: 'Role-based access, audit history, backups, and privacy controls.'
     };
+    document.getElementById('page-subtitle').textContent = subtitles[view];
+  }
 
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    let activeView = 'calendar';
-    let viewDate = new Date();
-    let selectedDate = startOfDay(new Date());
-    let registrations = load('healthbase-calendar-registrations', []);
-    let forms = load('healthbase-calendar-forms', []);
-    let medicalDetails = load('healthbase-medical-details', []);
-    let events = buildCareEvents();
-    let highlightedEventId = null;
+  function renderNav() {
+    document.getElementById('nav').innerHTML = navItems.map(([id, label]) => {
+      const count = id === 'dashboard' ? submissions.filter(s => s.status !== 'Completed').length : '';
+      return `<button class="nav-button ${id === activeView ? 'active' : ''}" data-view="${id}" onclick="openView('${id}')"><span>${label}</span>${count !== '' ? `<span class="badge">${count}</span>` : ''}</button>`;
+    }).join('');
+  }
 
-    const desktopNav = document.getElementById('desktopNav');
-    const mobileNav = document.getElementById('mobileNav');
-    const monthTitle = document.getElementById('monthTitle');
-    const todayLabel = document.getElementById('todayLabel');
-    const dayNamesEl = document.getElementById('dayNames');
-    const grid = document.getElementById('calendarGrid');
-    const selectedTitle = document.getElementById('selectedTitle');
-    const eventList = document.getElementById('eventList');
+  function metrics() {
+    const open = submissions.filter(s => s.status !== 'Completed').length;
+    const urgent = submissions.filter(s => s.priority === 'Urgent' && s.status !== 'Completed').length;
+    const volunteersActive = volunteers.filter(v => v.status === 'Active').length;
+    const hours = volunteers.reduce((sum, v) => sum + Number(v.hours || 0), 0);
+    return { open, urgent, volunteersActive, hours };
+  }
 
-    function init() {
-      desktopNav.innerHTML = navHtml();
-      mobileNav.innerHTML = navHtml(true);
-      dayNamesEl.innerHTML = dayNames.map(day => `<div class="day-name">${day}</div>`).join('');
-      document.getElementById('prevBtn').addEventListener('click', () => changeMonth(-1));
-      document.getElementById('nextBtn').addEventListener('click', () => changeMonth(1));
-      document.getElementById('medicalDetailsForm').addEventListener('submit', handleMedicalDetailsSubmit);
-      render();
-    }
-
-    function navHtml(mobile = false) {
-      return navItems.map(([id, label]) => `<button class="nav-button ${id === activeView ? 'active' : ''}" type="button" onclick="setView('${id}')"><span>${label}</span></button>`).join('');
-    }
-
-    function setView(id) {
-      activeView = id;
-      document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-      document.getElementById(id + 'View').classList.add('active');
-      document.querySelectorAll('.nav-button').forEach(button => button.classList.remove('active'));
-      document.querySelectorAll(`.nav-button[onclick="setView('${id}')"]`).forEach(button => button.classList.add('active'));
-      document.getElementById('pageTitle').textContent = titles[id][0];
-      document.getElementById('pageSubtitle').textContent = titles[id][1];
-      render();
-      if (window.innerWidth < 780) {
-        const active = document.querySelector('.mobile-nav .nav-button.active');
-        if (active) active.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
-      }
-    }
-
-    function buildCareEvents() {
-      const result = {};
-      const start = new Date();
-      start.setMonth(start.getMonth() - 1);
-      start.setDate(1);
-      const end = new Date();
-      end.setMonth(end.getMonth() + 4);
-      end.setDate(31);
-      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-        const day = d.getDay();
-        const key = dateKey(d);
-        if (day === 3) {
-          result[key] = result[key] || [];
-          result[key].push({
-            id: 'care-nav-' + key,
-            title: 'Care Navigation',
-            type: 'Wednesday',
-            date: key,
-            time: '10:00',
-            location: 'HealthBase Care Center',
-            notes: 'Help with intake, eligibility, referrals, benefits navigation, and follow-up planning.'
-          });
-        }
-        if (day === 0) {
-          result[key] = result[key] || [];
-          result[key].push({
-            id: 'community-' + key,
-            title: 'Community Health Support',
-            type: 'Sunday',
-            date: key,
-            time: '13:00',
-            location: 'Community Resource Room',
-            notes: 'Wellness support, medical information, food/resource referrals, and family assistance.'
-          });
-        }
-      }
-      return result;
-    }
-
-    function changeMonth(offset) {
-      viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + offset, 1);
-      renderCalendar();
-    }
-
-    function goToday() {
-      viewDate = new Date();
-      selectedDate = startOfDay(new Date());
-      highlightedEventId = null;
-      setView('calendar');
-    }
-
-    function registerForNextEvent() {
-      const next = upcomingEvents(1)[0];
-      if (!next) {
-        setView('calendar');
-        toast('No upcoming care events are currently scheduled.');
-        return;
-      }
-      highlightedEventId = next.id;
-      selectedDate = startOfDay(parseDate(next.date));
-      viewDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-      setView('calendar');
-      window.requestAnimationFrame(() => {
-        const form = document.querySelector(`.registration-form[data-event-id="${next.id}"]`);
-        const target = form || document.getElementById('eventList');
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'end' });
-        const firstInput = form ? form.querySelector('input[name="name"]') : null;
-        if (firstInput) setTimeout(() => firstInput.focus({ preventScroll: true }), 350);
-        toast(`Ready to register for ${next.title}`);
-      });
-    }
-
-    function render() {
-      renderBadges();
-      renderDashboard();
-      renderCalendar();
-      renderRegistrations();
-      renderMedicalDetails();
-      renderForms();
-      renderAnalytics();
-      renderAutomation();
-    }
-
-    function renderBadges() {
-      // Sidebar/mobile navigation intentionally shows labels only.
-      // Counts are displayed inside the dashboard and page content instead.
-    }
-
-    function upcomingEvents(limit = 6) {
-      const today = startOfDay(new Date());
-      return Object.values(events).flat().filter(e => startOfDay(parseDate(e.date)) >= today).sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time)).slice(0, limit);
-    }
-
-    function renderDashboard() {
-      document.getElementById('upcomingCount').textContent = upcomingEvents(99).length;
-      document.getElementById('registrationCount').textContent = registrations.length;
-      document.getElementById('openFormsCount').textContent = forms.filter(f => f.status !== 'Completed').length;
-      const target = document.getElementById('nextEventsList');
-      target.innerHTML = upcomingEvents(4).map(e => `
-        <div class="item">
-          <div class="item-top"><strong>${escapeHtml(e.title)}</strong><span class="pill ${e.type === 'Sunday' ? 'green' : 'purple'}">${e.type}</span></div>
-          <div class="muted small">${formatDate(parseDate(e.date))} · ${escapeHtml(e.time)} · ${escapeHtml(e.location)}</div>
-          <p class="muted small" style="margin:8px 0 0">${escapeHtml(e.notes)}</p>
+  function renderDashboard() {
+    const m = metrics();
+    document.getElementById('view-dashboard').innerHTML = `
+      <div class="grid cards">
+        ${metric('Open Requests', m.open, 'Needs staff follow-up')}
+        ${metric('Urgent Cases', m.urgent, 'High-priority intakes')}
+        ${metric('Active Volunteers', m.volunteersActive, 'Ready for assignments')}
+        ${metric('Volunteer Hours', m.hours, 'Tracked this period')}
+      </div>
+      <div class="grid two" style="margin-top:18px;">
+        <div class="card">
+          <div class="section-title"><h2>New & Assigned Submissions</h2><span class="chip">Website intake pipeline</span></div>
+          ${submissionsTable(submissions)}
         </div>
-      `).join('');
-    }
-
-    function renderCalendar() {
-      if (!monthTitle) return;
-      monthTitle.textContent = viewDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
-      todayLabel.textContent = `Today is ${new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}`;
-      selectedTitle.textContent = selectedDate.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
-
-      const firstOfMonth = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
-      const start = new Date(firstOfMonth);
-      start.setDate(start.getDate() - start.getDay());
-
-      grid.innerHTML = '';
-      for (let i = 0; i < 42; i++) {
-        const date = new Date(start);
-        date.setDate(start.getDate() + i);
-        const key = dateKey(date);
-        const cell = document.createElement('button');
-        cell.type = 'button';
-        cell.className = 'cell';
-        if (date.getMonth() !== viewDate.getMonth()) cell.classList.add('muted');
-        if (sameDay(date, selectedDate)) cell.classList.add('selected');
-        if (sameDay(date, new Date())) cell.classList.add('today');
-        const chips = (events[key] || []).slice(0, 3).map(e => `<span class="event-chip ${e.type === 'Sunday' ? 'sunday' : 'wednesday'}">${escapeHtml(e.time + ' ' + e.title)}</span>`).join('');
-        cell.innerHTML = `<span class="date-number">${date.getDate()}</span>${chips}`;
-        cell.addEventListener('click', () => {
-          selectedDate = startOfDay(date);
-          viewDate = new Date(date.getFullYear(), date.getMonth(), 1);
-          renderCalendar();
-        });
-        grid.appendChild(cell);
-      }
-      renderSelectedEvents();
-    }
-
-    function renderSelectedEvents() {
-      const items = events[dateKey(selectedDate)] || [];
-      if (!items.length) {
-        eventList.innerHTML = '<div class="empty">No HealthBase Care events on this day. Select a Wednesday or Sunday.</div>';
-        return;
-      }
-      eventList.innerHTML = items.map(event => {
-        return `<div class="event-card ${event.id === highlightedEventId ? 'featured-event' : ''}">
-          <div class="item-top"><strong>${escapeHtml(event.title)}</strong><span class="pill ${event.type === 'Sunday' ? 'green' : 'purple'}">${event.type}</span></div>
-          <small>${formatDate(parseDate(event.date))} · ${escapeHtml(event.time)} · ${escapeHtml(event.location)}</small>
-          <p>${escapeHtml(event.notes)}</p>
-          ${registrationForm(event)}
-        </div>`;
-      }).join('');
-      document.querySelectorAll('.registration-form').forEach(form => {
-        form.addEventListener('submit', handleRegistrationSubmit);
-      });
-    }
-
-    function registrationForm(event) {
-      return `<form class="registration-form" data-event-id="${event.id}" style="display:grid;gap:10px;margin-top:12px">
-        <input name="name" placeholder="Full name" required />
-        <input name="email" placeholder="Email or phone" required />
-        <select name="need">
-          <option>Care navigation</option>
-          <option>Medical information</option>
-          <option>Referral support</option>
-          <option>Volunteer interest</option>
-          <option>Transportation or access help</option>
-        </select>
-        <textarea name="notes" placeholder="Anything staff should know?"></textarea>
-        <button class="primary" type="submit">Register</button>
-      </form>`;
-    }
-
-    function handleRegistrationSubmit(e) {
-      e.preventDefault();
-      const form = e.currentTarget;
-      const event = Object.values(events).flat().find(item => item.id === form.dataset.eventId);
-      const data = Object.fromEntries(new FormData(form).entries());
-      const registration = {
-        id: randomId(),
-        name: data.name.trim(),
-        email: data.email.trim(),
-        need: data.need,
-        notes: data.notes.trim(),
-        eventId: event.id,
-        eventTitle: event.title,
-        eventDate: event.date,
-        eventTime: event.time,
-        submittedAt: new Date().toISOString(),
-        status: 'Registered'
-      };
-      if (!registration.name || !registration.email) return;
-      registrations.unshift(registration);
-      forms.unshift({
-        id: randomId(),
-        submittedAt: registration.submittedAt,
-        type: 'Event registration',
-        name: registration.name,
-        contact: registration.email,
-        relatedEvent: `${event.title} — ${formatDate(parseDate(event.date))}`,
-        need: registration.need,
-        notes: registration.notes,
-        status: 'New'
-      });
-      save('healthbase-calendar-registrations', registrations);
-      save('healthbase-calendar-forms', forms);
-      form.reset();
-      toast(`${registration.name} registered for ${event.title}`);
-      render();
-    }
-
-    function handleMedicalDetailsSubmit(e) {
-      e.preventDefault();
-      const form = e.currentTarget;
-      const data = Object.fromEntries(new FormData(form).entries());
-      const entry = {
-        id: randomId(),
-        submittedAt: new Date().toISOString(),
-        name: data.name.trim(),
-        contact: data.contact.trim(),
-        notes: data.notes.trim(),
-        status: 'New'
-      };
-      if (!entry.name || !entry.contact) return;
-      medicalDetails.unshift(entry);
-      forms.unshift({
-        id: randomId(),
-        submittedAt: entry.submittedAt,
-        type: 'Medical information',
-        name: entry.name,
-        contact: entry.contact,
-        relatedEvent: 'Medical details intake',
-        need: 'Medical information',
-        notes: entry.notes,
-        status: 'New'
-      });
-      save('healthbase-medical-details', medicalDetails);
-      save('healthbase-calendar-forms', forms);
-      form.reset();
-      toast(`Medical details saved for ${entry.name}`);
-      render();
-    }
-
-    function renderMedicalDetails() {
-      const list = document.getElementById('medicalDetailsList');
-      if (!list) return;
-      list.innerHTML = medicalDetails.slice(0, 5).map(item => `
-        <div class="item">
-          <div class="item-top"><strong>${escapeHtml(item.name)}</strong><span class="pill green">Saved</span></div>
-          <div class="muted small">${escapeHtml(item.contact)}</div>
-          ${item.notes ? `<p class="muted small" style="margin:8px 0 0">${escapeHtml(item.notes)}</p>` : ''}
+        <div class="grid">
+          <div class="card">
+            <div class="section-title"><h2>Overdue / Priority Follow-ups</h2></div>
+            <div class="list">
+              ${submissions.filter(s => s.priority === 'Urgent' || s.due === 'Today').map(s => item(s.name, `${s.type} · Assigned to ${s.assigned}`, s.priority === 'Urgent' ? 'urgent' : statusClass(s.status, s.priority), s.priority)).join('') || '<p class="muted">No urgent follow-ups.</p>'}
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title"><h2>Recent Activity</h2></div>
+            <div class="timeline">${activity.slice(0,5).map(a => `<div class="item small">${a}</div>`).join('')}</div>
+          </div>
         </div>
-      `).join('') || '<div class="empty">No medical details submitted yet.</div>';
-    }
+      </div>`;
+  }
 
-    function renderRegistrations() {
-      const tbody = document.getElementById('registrationsTable');
-      tbody.innerHTML = registrations.length ? registrations.map(r => `<tr><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.eventTitle)}</td><td>${formatDate(parseDate(r.eventDate))}</td><td>${escapeHtml(r.email)}</td><td>${escapeHtml(r.need)}</td><td><span class="pill green">${escapeHtml(r.status)}</span></td></tr>`).join('') : `<tr><td colspan="6" class="muted">No registrations yet. Register from the Care Calendar.</td></tr>`;
-    }
+  function metric(label, value, note) {
+    return `<div class="card"><div class="metric-label">${label}</div><div class="metric-value">${value}</div><div class="metric-note">${note}</div></div>`;
+  }
 
-    function renderForms() {
-      const tbody = document.getElementById('formsTable');
-      tbody.innerHTML = forms.length ? forms.map(f => `<tr><td>${formatDateTime(f.submittedAt)}</td><td>${escapeHtml(f.type)}</td><td>${escapeHtml(f.name)}</td><td>${escapeHtml(f.relatedEvent)}</td></tr>`).join('') : `<tr><td colspan="4" class="muted">No submitted forms yet.</td></tr>`;
-    }
+  function item(title, desc, cls, label) {
+    return `<div class="item"><div class="item-head"><strong>${title}</strong><span class="pill ${cls}">${label}</span></div><div class="small">${desc}</div></div>`;
+  }
 
-    function advanceForm(id) {
-      forms = forms.map(f => f.id === id ? { ...f, status: f.status === 'New' ? 'In Review' : f.status === 'In Review' ? 'Completed' : 'New' } : f);
-      save('healthbase-calendar-forms', forms);
-      render();
-    }
+  function submissionsTable(rows) {
+    return `<table><thead><tr><th>Name</th><th>Type</th><th>Status</th><th>Assigned</th><th>Due</th><th></th></tr></thead><tbody>${rows.map(s => `
+      <tr>
+        <td><strong>${s.name}</strong><div class="small">${s.email}</div></td>
+        <td>${s.type}<div class="small">${s.notes}</div></td>
+        <td><span class="pill ${statusClass(s.status, s.priority)}">${s.priority === 'Urgent' ? 'Urgent' : s.status}</span></td>
+        <td>${s.assigned}</td>
+        <td>${s.due}</td>
+        <td><select onchange="updateStatus(${s.id}, this.value)"><option ${s.status==='New'?'selected':''}>New</option><option ${s.status==='In Review'?'selected':''}>In Review</option><option ${s.status==='Completed'?'selected':''}>Completed</option></select></td>
+      </tr>`).join('')}</tbody></table>`;
+  }
 
-    function resetDemoData() {
-      registrations = [];
-      forms = [];
-      medicalDetails = [];
-      highlightedEventId = null;
-      localStorage.removeItem('healthbase-calendar-registrations');
-      localStorage.removeItem('healthbase-calendar-forms');
-      localStorage.removeItem('healthbase-medical-details');
-      toast('Demo data reset');
-      render();
-    }
+  function updateStatus(id, status) {
+    const s = submissions.find(x => x.id === id);
+    if (!s) return;
+    s.status = status;
+    activity.unshift(`${s.name} status changed to ${status}`);
+    save(); render(); openView(activeView);
+  }
 
-    function seedDemoForms() {
-      forms.unshift({ id: randomId(), submittedAt: new Date().toISOString(), type: 'General inquiry', name: 'Jordan Rivera', contact: 'jordan@example.org', relatedEvent: 'Community Health Support', need: 'Medical information', notes: 'Asked about Sunday resources.', status: 'New' });
-      save('healthbase-calendar-forms', forms);
-      toast('Demo form added');
-      render();
-    }
+  function renderIntake() {
+    document.getElementById('view-intake').innerHTML = `
+      <div class="grid two">
+        <div class="card">
+          <div class="section-title"><h2>Website Intake Form</h2><span class="chip">Creates case + task + email</span></div>
+          <form id="intakeForm" class="form-grid" onsubmit="addSubmission(event)">
+            <label>Name<input name="name" required placeholder="Client, volunteer, donor, or partner name"></label>
+            <label>Email<input name="email" type="email" required placeholder="name@example.org"></label>
+            <label>Request Type<select name="type"><option>Request for services</option><option>Volunteer application</option><option>Donation inquiry</option><option>Community partner referral</option><option>Event registration</option><option>General contact form</option><option>Emergency or high-priority request</option></select></label>
+            <label>Priority<select name="priority"><option>Normal</option><option>Urgent</option></select></label>
+            <label>Assign To<select name="assigned"><option>Ava Chen</option><option>Sam Patel</option><option>Leah Stone</option><option>Nora Bell</option></select></label>
+            <label>Follow-up Due<select name="due"><option>Today</option><option>Tomorrow</option><option>2 days</option><option>Next week</option></select></label>
+            <label class="full">Notes<textarea name="notes" placeholder="What does the person need? Eligibility info? Referral source? Documents required?"></textarea></label>
+            <div class="full actions"><button class="primary" type="submit">Submit Intake</button><button class="secondary" type="reset">Clear</button></div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="section-title"><h2>Automatic Workflow</h2></div>
+          <div class="list">
+            ${['Save secure database record','Categorize by request type','Assign staff owner','Send confirmation email','Create internal follow-up task','Track status from New → Completed','Store notes and history'].map((x,i)=> item(`${i+1}. ${x}`, 'Included in MVP workflow concept.', 'review', 'Auto')).join('')}
+          </div>
+        </div>
+      </div>`;
+  }
 
-    function renderAnalytics() {
-      const monthKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-      const thisMonthRegs = registrations.filter(r => r.eventDate.startsWith(monthKey));
-      const wednesday = thisMonthRegs.filter(r => r.eventTitle.includes('Care Navigation')).length;
-      const sunday = thisMonthRegs.filter(r => r.eventTitle.includes('Community Health')).length;
-      const openForms = forms.filter(f => f.status !== 'Completed').length;
-      document.getElementById('analyticsRegistrations').textContent = thisMonthRegs.length;
-      document.getElementById('analyticsWednesday').textContent = wednesday;
-      document.getElementById('analyticsSunday').textContent = sunday;
-      document.getElementById('analyticsOpenForms').textContent = openForms;
-      document.getElementById('analyticsPeople').textContent = registrations.length;
-      document.getElementById('analyticsEvents').textContent = upcomingEvents(99).length;
-      document.getElementById('analyticsForms').textContent = openForms;
-    }
+  function addSubmission(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target).entries());
+    submissions.unshift({ id: Date.now(), status: 'New', ...data });
+    activity.unshift(`New ${data.type.toLowerCase()} received from ${data.name}`);
+    activity.unshift(`Confirmation email queued for ${data.name}`);
+    save(); render(); event.target.reset(); openView('dashboard');
+  }
 
-    function renderAutomation() {
-      const list = document.getElementById('automationFormsList');
-      list.innerHTML = forms.slice(0, 5).map(f => `<div class="item"><div class="item-top"><strong>${escapeHtml(f.name)}</strong><span class="pill ${f.status === 'Completed' ? 'green' : f.status === 'In Review' ? 'warn' : 'purple'}">${escapeHtml(f.status)}</span></div><div class="muted small">${escapeHtml(f.type)} · ${escapeHtml(f.relatedEvent)}</div><p class="muted small" style="margin:8px 0 0">${escapeHtml(f.need)}</p></div>`).join('') || '<div class="empty">No submitted forms yet.</div>';
-    }
+  function renderCases() {
+    document.getElementById('view-cases').innerHTML = `
+      <div class="grid two">
+        <div class="card"><div class="section-title"><h2>Case / Client Records</h2><span class="chip">Continuity across staff</span></div>${submissionsTable(submissions.filter(s => s.type.includes('services') || s.type.includes('referral') || s.priority === 'Urgent'))}</div>
+        <div class="card"><div class="section-title"><h2>Selected Case Profile</h2></div>
+          ${caseProfile(submissions[0])}
+        </div>
+      </div>`;
+  }
 
-    function parseDate(key) {
-      const [y, m, d] = key.split('-').map(Number);
-      return new Date(y, m - 1, d);
-    }
-    function dateKey(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
-    function startOfDay(date) { return new Date(date.getFullYear(), date.getMonth(), date.getDate()); }
-    function sameDay(a, b) { return dateKey(a) === dateKey(b); }
-    function formatDate(date) { return date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); }
-    function formatDateTime(iso) { return new Date(iso).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); }
-    function randomId() { return (crypto.randomUUID && crypto.randomUUID()) || String(Date.now() + Math.random()); }
-    function load(key, fallback) { try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch { return fallback; } }
-    function save(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
-    function escapeHtml(value) { return String(value || '').replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c])); }
-    function toast(message) {
-      const el = document.getElementById('toast');
-      el.textContent = message;
-      el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 2600);
-    }
+  function caseProfile(s) {
+    if (!s) return '<p class="muted">No cases yet.</p>';
+    return `<div class="list">
+      ${item(s.name, `${s.email} · ${s.type}`, statusClass(s.status, s.priority), s.status)}
+      <div class="item"><strong>Eligibility</strong><div class="small">Pending review. Staff can add criteria, service history, referral source, and outcome.</div></div>
+      <div class="item"><strong>Documents</strong><div class="small">Upload proof of address, IDs, referral forms, or signed releases in future version.</div></div>
+      <div class="item"><strong>Follow-up History</strong><div class="small">${s.notes}</div></div>
+      <div class="item"><strong>Outcome Tracking</strong><div class="small">Not started → Service provided → Referred externally → Closed.</div></div>
+    </div>`;
+  }
 
-    init();
-  </script>
+  function renderVolunteers() {
+    document.getElementById('view-volunteers').innerHTML = `
+      <div class="card"><div class="section-title"><h2>Volunteer Management</h2><button class="secondary" onclick="addVolunteer()">+ Demo Volunteer</button></div>
+      <table><thead><tr><th>Name</th><th>Status</th><th>Availability</th><th>Skills</th><th>Background Check</th><th>Hours</th></tr></thead><tbody>${volunteers.map(v => `<tr><td><strong>${v.name}</strong></td><td><span class="pill ${v.status==='Active'?'done':'review'}">${v.status}</span></td><td>${v.availability}</td><td>${v.skills}</td><td>${v.check}</td><td>${v.hours}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  function addVolunteer() {
+    volunteers.unshift({ name: 'New Volunteer', status: 'Application', hours: 0, availability: 'TBD', skills: 'Intake form pending', check: 'Pending' });
+    activity.unshift('New volunteer application created'); save(); render(); openView('volunteers');
+  }
+
+  function renderDonors() {
+    document.getElementById('view-donors').innerHTML = `
+      <div class="card"><div class="section-title"><h2>Donor, Sponsor & Partner CRM</h2><span class="chip">Relationship tracking</span></div>
+      <table><thead><tr><th>Name</th><th>Type</th><th>Total Giving / Value</th><th>Next Action</th><th>Status</th></tr></thead><tbody>${donors.map(d => `<tr><td><strong>${d.name}</strong></td><td>${d.type}</td><td>${d.total}</td><td>${d.next}</td><td><span class="pill review">${d.status}</span></td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  function renderReports() {
+    const m = metrics();
+    const serviceRequests = submissions.filter(s => s.type.includes('services') || s.type.includes('Emergency')).length;
+    document.getElementById('view-reports').innerHTML = `
+      <div class="grid cards">${metric('People Served', serviceRequests, 'Demo month')}${metric('Avg Response', '1.8d', 'Target under 2 days')}${metric('Open vs Completed', `${m.open}/${submissions.length}`, 'Workflow health')}${metric('Volunteer Hours', m.hours, 'Grant-ready metric')}</div>
+      <div class="grid three" style="margin-top:18px;">
+        ${reportCard('Services by Category', [['Services', serviceRequests, 70], ['Volunteers', volunteers.length, 55], ['Donation/Partner', donors.length, 45]])}
+        ${reportCard('Referral Sources', [['Website', 8, 80], ['Partners', 3, 45], ['Events', 2, 30]])}
+        ${reportCard('Case Outcomes', [['Completed', submissions.filter(s=>s.status==='Completed').length, 35], ['In Review', submissions.filter(s=>s.status==='In Review').length, 50], ['New', submissions.filter(s=>s.status==='New').length, 65]])}
+      </div>`;
+  }
+
+  function reportCard(title, rows) {
+    return `<div class="card"><h2>${title}</h2>${rows.map(([label, val, width]) => `<div style="margin-top:14px;"><div class="small" style="display:flex; justify-content:space-between;"><span>${label}</span><strong>${val}</strong></div><div class="bar"><span style="width:${width}%"></span></div></div>`).join('')}</div>`;
+  }
+
+  function renderAutomation() {
+    const flows = [
+      ['Form confirmation', 'Send submitter an immediate email with next steps.'],
+      ['Staff overdue reminders', 'Notify owner when a follow-up is past due.'],
+      ['Volunteer shift reminders', 'Send reminder before assigned shift or event.'],
+      ['Donation thank-you', 'Send personalized receipt and appreciation note.'],
+      ['Weekly internal summary', 'Email leadership new cases, completions, and bottlenecks.']
+    ];
+    document.getElementById('view-automation').innerHTML = `<div class="grid two"><div class="card"><div class="section-title"><h2>Automation Rules</h2><span class="chip">Reducing admin work</span></div><div class="list">${flows.map(f => item(f[0], f[1], 'review', 'Enabled')).join('')}</div></div><div class="card"><h2>Email Template Preview</h2><div class="item" style="margin-top:14px;"><strong>Subject: We received your request</strong><div class="small" style="margin-top:8px;">Thank you for contacting us. Your request has been received and assigned to our team. We will follow up shortly. If this is urgent, please call our office directly.</div></div></div></div>`;
+  }
+
+  function renderSecurity() {
+    const rows = ['Staff login accounts', 'Role-based permissions', 'Encrypted form submission handling', 'Limited access to client data', 'Audit history for changes', 'Regular backups', 'Admin user management'];
+    document.getElementById('view-security').innerHTML = `<div class="grid two"><div class="card"><div class="section-title"><h2>Security & Privacy Controls</h2></div><div class="list">${rows.map(r => item(r, 'Required for handling sensitive nonprofit data.', 'done', 'MVP')).join('')}</div></div><div class="card"><h2>Suggested Roles</h2><table style="margin-top:12px;"><tbody><tr><td><strong>Admin</strong></td><td>Users, settings, all records</td></tr><tr><td><strong>Program Staff</strong></td><td>Cases, notes, documents</td></tr><tr><td><strong>Volunteer Coordinator</strong></td><td>Volunteer records and shifts</td></tr><tr><td><strong>Development</strong></td><td>Donors, grants, partners</td></tr><tr><td><strong>Read-only Board</strong></td><td>Reports only</td></tr></tbody></table></div></div>`;
+  }
+
+  function render() {
+    renderNav(); renderDashboard(); renderIntake(); renderCases(); renderVolunteers(); renderDonors(); renderReports(); renderAutomation(); renderSecurity();
+  }
+
+  load(); render(); openView('dashboard');
+</script>
 </body>
 </html>
